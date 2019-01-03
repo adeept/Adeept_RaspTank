@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # File name   : LED.py
 # Description : WS_2812
-# Website     : www.adeept.com
+# Website     : based on the code from https://github.com/rpi-ws281x/rpi-ws281x-python/blob/master/examples/strandtest.py
 # E-mail      : support@adeept.com
-# Author      : William
+# Author      : original code by Tony DiCola (tony@tonydicola.com)
 # Date        : 2018/10/12
 import time
 from rpi_ws281x import *
