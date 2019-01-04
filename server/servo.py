@@ -40,18 +40,18 @@ def camera_ang(direction, ang):
 	global org_pos
 	if ang == 0:
 		ang=4
-	if direction == 'lookup':
+	if direction == 'lookdown':
 		if org_pos <= L11_MAX:
 			org_pos+=ang
 		else:
 			org_pos = L11_MAX
-	elif direction == 'lookdown':
-		if org_pos >= L11_ST1:
+	elif direction == 'lookup':
+		if org_pos >= L11_MIN:
 			org_pos-=ang
 		else:
-			org_pos = L11_ST1
+			org_pos = L11_MIN
 	elif direction == 'home':
-		org_pos = L11_ST1
+		org_pos = L11_MAX
 	else:
 		pass
 	#print(ang)
@@ -80,10 +80,11 @@ def catch(pos):
 
 def hand_pos(pos):
 	if pos <= 4:
-		pwm.set_pwm(12, 0, (L12_ST1-20*pos))
+		pwm.set_pwm(12, 0, L12_ST1-30*pos)
+		pwm.set_pwm(13, 0, L13_ST1-30*pos)
 	else:
-		pwm.set_pwm(12, 0, (L12_ST4+20*pos))
-	pwm.set_pwm(13, 0, L13_ST1+23*pos)
+		pwm.set_pwm(12, 0, (L12_ST1-24*pos))
+		pwm.set_pwm(13, 0, L13_ST3-6*(pos-4))
 
 
 def clean_all():

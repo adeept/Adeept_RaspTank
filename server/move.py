@@ -20,14 +20,14 @@ Motor_A_Pin2  = 10
 Motor_B_Pin1  = 13
 Motor_B_Pin2  = 12
 
-Dir_forward   = 1
-Dir_backward  = 0
+Dir_forward   = 0
+Dir_backward  = 1
 
-left_forward  = 0
-left_backward = 1
+left_forward  = 1
+left_backward = 0
 
-right_forward = 1
-right_backward= 0
+right_forward = 0
+right_backward= 1
 
 pwn_A = 0
 pwm_B = 0
@@ -60,7 +60,7 @@ def setup():#Motor initialization
 		pass
 
 
-def motor_right(status, direction, speed):#Motor 2 positive and negative rotation
+def motor_left(status, direction, speed):#Motor 2 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_B_Pin1, GPIO.LOW)
 		GPIO.output(Motor_B_Pin2, GPIO.LOW)
@@ -78,7 +78,7 @@ def motor_right(status, direction, speed):#Motor 2 positive and negative rotatio
 			pwm_B.ChangeDutyCycle(speed)
 
 
-def motor_left(status, direction, speed):#Motor 1 positive and negative rotation
+def motor_right(status, direction, speed):#Motor 1 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_A_Pin1, GPIO.LOW)
 		GPIO.output(Motor_A_Pin2, GPIO.LOW)
@@ -98,6 +98,7 @@ def motor_left(status, direction, speed):#Motor 1 positive and negative rotation
 
 
 def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1  
+	speed = 100
 	if direction == 'forward':
 		if turn == 'left':
 			motor_left(0, left_backward, int(speed*radius))
@@ -106,8 +107,8 @@ def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1
 			motor_left(1, left_forward, speed)
 			motor_right(0, right_backward, int(speed*radius))
 		else:
-			motor_left(1, 0, speed)
-			motor_right(1, 1, speed)
+			motor_left(1, left_forward, 100)
+			motor_right(1, right_forward, 100)
 	elif direction == 'backward':
 		if turn == 'left':
 			motor_left(0, left_forward, int(speed*radius))
