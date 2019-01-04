@@ -20,14 +20,14 @@ def replace_num(file,initial,new_num):
     with open(file,"w") as f:
         f.writelines(newline)
 
-os.system("sudo apt-get purge wolfram-engine")
-os.system("sudo apt-get purge libreoffice*")
-os.system("sudo apt-get clean")
-os.system("sudo apt-get autoremove")
-
 for x in range(1,4):
 	if os.system("sudo apt-get update") == 0:
 		break
+
+os.system("sudo apt-get purge -y wolfram-engine")
+os.system("sudo apt-get purge -y libreoffice*")
+os.system("sudo apt-get -y clean")
+os.system("sudo apt-get -y autoremove")
 
 for x in range(1,4):
 	if os.system("sudo apt-get -y upgrade") == 0:
@@ -63,31 +63,35 @@ for x in range(1,4):
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install libhdf5-dev") == 0:   ####
+	if os.system("sudo apt-get install -y libhdf5-dev") == 0:   ####
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install libhdf5-serial-dev") == 0:   ####
+	if os.system("sudo apt-get install -y libhdf5-serial-dev") == 0:   ####
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install build-essential pkg-config") == 0:   ####
+	if os.system("sudo apt-get install -y build-essential pkg-config") == 0:   ####
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev") == 0:   ####
+	if os.system("sudo apt-get install -y libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev") == 0:   ####
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev") == 0:   ####
+	if os.system("sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev") == 0:   ####
 		break
 
 for x in range(1,4):
-	if os.system("sudo apt-get install libgtk2.0-dev libatlas-base-dev gfortran") == 0:   ####
+	if os.system("sudo apt-get install -y libgtk2.0-dev libatlas-base-dev gfortran") == 0:   ####
 		break
-		
+
 for x in range(1,4):
-	if os.system("sudo pip3 install imutils zmq pybase64") == 0:   ####
+	if os.system("sudo apt-get install -y libqtgui4 python3-pyqt5 libqt4-test") == 0:
+		break
+
+for x in range(1,4):
+	if os.system("sudo pip3 install imutils zmq pybase64 psutil") == 0:   ####
 		break
 
 for x in range(1,4):
