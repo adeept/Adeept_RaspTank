@@ -289,6 +289,7 @@ if __name__ == '__main__':
     PORT = 10223                              #Define port serial 
     BUFSIZ = 1024                             #Define buffer size
     ADDR = (HOST, PORT)
+    pwm.set_all_pwm(0,300)
 
     try:
         LED  = LED.LED()
@@ -344,6 +345,7 @@ if __name__ == '__main__':
             pass
 
     try:
+        pwm.set_all_pwm(0,0)
         run()
     except:
         LED.colorWipe(Color(0,0,0))
