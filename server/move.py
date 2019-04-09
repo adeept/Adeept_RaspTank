@@ -23,8 +23,8 @@ Motor_B_Pin2  = 12
 Dir_forward   = 0
 Dir_backward  = 1
 
-left_forward  = 1
-left_backward = 0
+left_forward  = 0
+left_backward = 1
 
 right_forward = 0
 right_backward= 1
@@ -60,7 +60,7 @@ def setup():#Motor initialization
 		pass
 
 
-def motor_left(status, direction, speed):#Motor 2 positive and negative rotation
+def motor_right(status, direction, speed):#Motor 2 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_B_Pin1, GPIO.LOW)
 		GPIO.output(Motor_B_Pin2, GPIO.LOW)
@@ -78,7 +78,7 @@ def motor_left(status, direction, speed):#Motor 2 positive and negative rotation
 			pwm_B.ChangeDutyCycle(speed)
 
 
-def motor_right(status, direction, speed):#Motor 1 positive and negative rotation
+def motor_left(status, direction, speed):#Motor 1 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_A_Pin1, GPIO.LOW)
 		GPIO.output(Motor_A_Pin2, GPIO.LOW)
