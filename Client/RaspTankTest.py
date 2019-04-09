@@ -222,7 +222,7 @@ def instruction():
         instructions.append(instruction_2)
         instruction_3 = 'I: Look up   K: Look down   J: Grab   L: Loose'
         instructions.append(instruction_3)
-        instruction_4 = 'E: Hand reaches out   Q: Hand takes back   U & O: Hand rotation'
+        instruction_4 = 'Q: Hand reaches out   E: Hand takes back   U & O: Hand rotation'
         instructions.append(instruction_4)
         instruction_5 = 'F(the Home button on GUI): Arm and head return to original positionl position'
         instructions.append(instruction_5)
