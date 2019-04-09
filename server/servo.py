@@ -59,13 +59,13 @@ def camera_ang(direction, ang):
 
 
 def hand(command):
-	if command == 'out':
+	if command == 'in':
 		pwm.set_pwm(13, 0, L13_ST3)
 		pwm.set_pwm(12, 0, L12_ST4)
 		time.sleep(0.5)
 		pwm.set_pwm(13, 0, L13_ST2)
 		pwm.set_pwm(12, 0, L12_ST2)
-	elif command == 'in':
+	elif command == 'out':
 		pwm.set_pwm(12, 0, L12_ST1)
 		pwm.set_pwm(13, 0, L13_ST1)
 
