@@ -222,7 +222,7 @@ def instruction():
         instructions.append(instruction_2)
         instruction_3 = 'I: Look up   K: Look down   J: Grab   L: Loose'
         instructions.append(instruction_3)
-        instruction_4 = 'Q: Hand reaches out   E: Hand takes back   U & O: Hand rotation'
+        instruction_4 = 'E: Hand reaches out   Q: Hand takes back   U & O: Hand rotation'
         instructions.append(instruction_4)
         instruction_5 = 'F(the Home button on GUI): Arm and head return to original positionl position'
         instructions.append(instruction_5)
@@ -401,7 +401,7 @@ def loop():                      #GUI
         target_color='#FF6D00'
 
         root = tk.Tk()            #Define a window named root
-        root.title('Adeept Tensor-Dog')      #Main window title
+        root.title('Adeept RaspTank')      #Main window title
         root.geometry('565x510')  #Main window size, middle of the English letter x.
         root.config(bg=color_bg)  #Set the background color of root window
 
@@ -499,8 +499,8 @@ def loop():                      #GUI
 
         Btn_up = tk.Button(root, width=8, text='Up',fg=color_text,bg=color_btn,relief='ridge')
         Btn_down = tk.Button(root, width=8, text='Down',fg=color_text,bg=color_btn,relief='ridge')
-        Btn_left = tk.Button(root, width=8, text='Left',fg=color_text,bg=color_btn,relief='ridge')
-        Btn_right = tk.Button(root, width=8, text='Right',fg=color_text,bg=color_btn,relief='ridge')
+        Btn_left = tk.Button(root, width=8, text='Grab',fg=color_text,bg=color_btn,relief='ridge')
+        Btn_right = tk.Button(root, width=8, text='Loose',fg=color_text,bg=color_btn,relief='ridge')
         Btn_home = tk.Button(root, width=8, text='Home',fg=color_text,bg=color_btn,relief='ridge')
         Btn_up.place(x=400,y=195)
         Btn_down.place(x=400,y=230)
