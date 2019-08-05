@@ -12,13 +12,13 @@ import RPi.GPIO as GPIO
 # motor_EN_A: Pin7  |  motor_EN_B: Pin11
 # motor_A:  Pin8,Pin10    |  motor_B: Pin13,Pin12
 
-Motor_A_EN    = 7
-Motor_B_EN    = 11
+Motor_A_EN    = 4
+Motor_B_EN    = 17
 
-Motor_A_Pin1  = 8
-Motor_A_Pin2  = 10
-Motor_B_Pin1  = 13
-Motor_B_Pin2  = 12
+Motor_A_Pin1  = 14
+Motor_A_Pin2  = 15
+Motor_B_Pin1  = 27
+Motor_B_Pin2  = 18
 
 Dir_forward   = 0
 Dir_backward  = 1
