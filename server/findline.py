@@ -18,9 +18,9 @@ right_spd  = num_import_int('E_M2:')         #Speed of the car
 left       = num_import_int('E_T1:')         #Motor Left
 right      = num_import_int('E_T2:')         #Motor Right
 '''
-line_pin_right = 35
-line_pin_middle = 36
-line_pin_left = 38
+line_pin_right = 19
+line_pin_middle = 16
+line_pin_left = 20
 '''
 left_R = 15
 left_G = 16
