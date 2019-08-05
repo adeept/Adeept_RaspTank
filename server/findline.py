@@ -38,7 +38,7 @@ spd_ad_2 = 1
 '''
 def setup():
     GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(line_pin_right,GPIO.IN)
     GPIO.setup(line_pin_middle,GPIO.IN)
     GPIO.setup(line_pin_left,GPIO.IN)
