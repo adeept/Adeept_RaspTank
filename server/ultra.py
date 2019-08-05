@@ -8,12 +8,12 @@
 import RPi.GPIO as GPIO
 import time
 
-Tr = 23
-Ec = 24
+Tr = 11
+Ec = 8
 
 def checkdist():       #Reading distance
     GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(Tr, GPIO.OUT,initial=GPIO.LOW)
     GPIO.setup(Ec, GPIO.IN)
     GPIO.output(Tr, GPIO.HIGH)
