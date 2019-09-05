@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-# File name   : motor.py
-# Description : Control Motors 
+# File name   : setup.py
+# Description : install the software for RPi 
 # Website     : www.adeept.com
 # E-mail      : support@adeept.com
 # Author      : William
@@ -106,7 +106,7 @@ except:
 for x in range(1,4):
 	if os.system("sudo apt-get install -y util-linux procps hostapd iproute2 iw haveged dnsmasq") == 0:
 		break
-
+'''
 try:
 	os.system('sudo mkdir //home/pi/.config/autostart')
 	os.system('sudo touch //home/pi/.config/autostart/car.desktop')
@@ -114,6 +114,17 @@ try:
 		file_to_write.write("[Desktop Entry]\n   Name=Car\n   Comment=Car\n   Exec=sudo python3 //home/pi/adeept_rasptank/server/server.py\n   Icon=false\n   Terminal=false\n   MutipleArgs=false\n   Type=Application\n   Catagories=Application;Development;\n   StartupNotify=true")
 except:
 	pass
+'''
+try:
+	os.system('sudo touch //home/pi/startup.sh')
+	with open("//home/pi/startup.sh",'w') as file_to_write:
+		file_to_write.write("#!/bin/sh\nsleep 10s\nsudo python3 //home/pi/adeept_rasptank/server/server.py")
+except:
+	pass
+
+os.system('sudo chmod 777 //home/pi/startup.sh')
+
+replace_num('/etc/rc.local','fi','fi\n//home/pi/startup.sh start')
 
 os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //home/pi/config.txt")
 
