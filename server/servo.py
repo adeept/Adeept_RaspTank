@@ -17,7 +17,7 @@ pwm.set_pwm_freq(50)
 
 def num_import_int(initial):		#Call this function to import data from '.txt' file
 	global r
-	with open("config.txt") as f:
+	with open("//etc/config.txt") as f:
 		for line in f.readlines():
 			if(line.find(initial) == 0):
 				r=line
