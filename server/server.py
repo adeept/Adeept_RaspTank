@@ -11,6 +11,9 @@ import time
 import threading
 import move
 import Adafruit_PCA9685
+pwm = Adafruit_PCA9685.PCA9685()
+pwm.set_pwm_freq(50)
+pwm.set_all_pwm(0,300)
 from rpi_ws281x import *
 import argparse
 import os
@@ -28,8 +31,8 @@ rad = 0.6
 new_frame = 0
 direction_command = 'no'
 turn_command = 'no'
-pwm = Adafruit_PCA9685.PCA9685()
-pwm.set_pwm_freq(50)
+#pwm = Adafruit_PCA9685.PCA9685()
+#pwm.set_pwm_freq(50)
 pos_input = 1
 catch_input = 1
 cir_input = 6
