@@ -133,6 +133,8 @@ replace_num('/etc/rc.local','fi','fi\n//home/pi/startup.sh start')
 
 os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //home/pi/config.txt")
 
+os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //etc/config.txt")
+
 print('restarting')
 
 os.system("sudo reboot")
