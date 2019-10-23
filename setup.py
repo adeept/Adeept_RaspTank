@@ -19,7 +19,7 @@ def replace_num(file,initial,new_num):
             newline += line
     with open(file,"w") as f:
         f.writelines(newline)
-
+'''
 for x in range(1,4):
 	if os.system("sudo apt-get update") == 0:
 		break
@@ -32,7 +32,7 @@ os.system("sudo apt-get -y autoremove")
 for x in range(1,4):
 	if os.system("sudo apt-get -y upgrade") == 0:
 		break
-
+'''
 for x in range(1,4):
 	if os.system("sudo apt-get install -y i2c-tools") == 0:
 		break
@@ -61,7 +61,7 @@ for x in range(1,4):
 for x in range(1,4):
 	if os.system("sudo apt-get install -y libopencv-dev python3-opencv") == 0:
 		break
-
+'''
 for x in range(1,4):
 	if os.system("sudo apt-get install -y libhdf5-dev") == 0:   ####
 		break
@@ -89,7 +89,7 @@ for x in range(1,4):
 for x in range(1,4):
 	if os.system("sudo apt-get install -y libqtgui4 python3-pyqt5 libqt4-test") == 0:
 		break
-
+'''
 for x in range(1,4):
 	if os.system("sudo pip3 install imutils zmq pybase64 psutil") == 0:   ####
 		break
