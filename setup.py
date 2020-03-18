@@ -76,7 +76,7 @@ for x in range(1,4):
 		break
 
 for x in range(1,4):
-	if os.system("pip3 install opencv-contrib-python==3.4.3.18") == 0:
+	if os.system("sudo pip3 install opencv-contrib-python==3.4.3.18") == 0:
 		break
 
 for x in range(1,4):
