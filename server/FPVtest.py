@@ -61,6 +61,8 @@ modeText = 'Select your mode, ARM or PT?'
 scGear = RPIservo.ServoCtrl()
 scGear.moveInit()
 
+elements = []
+
 def findLineCtrl(posInput, setCenter):#2
 	if posInput:
 		if posInput > (setCenter + findLineError):
@@ -96,6 +98,7 @@ def findLineCtrl(posInput, setCenter):#2
 		# 		print(e)
 		#	move.move(80, 'backward', 'no', 0.5)
 		pass
+
 
 def cvFindLine():#2
 	global frame_findline, camera#3
@@ -165,8 +168,6 @@ def cvFindLine():#2
 	except:
 		pass
 
-# def cvFindLineOff():
-# 	camera.exposure_mode = 'on'
 
 class FPV: 
 	def __init__(self):
@@ -236,11 +237,6 @@ class FPV:
 
 	def capture_thread(self,IPinver):
 		global frame_image, camera#Z
-		ap = argparse.ArgumentParser()			#OpenCV initialization
-		ap.add_argument("-b", "--buffer", type=int, default=64,
-			help="max buffer size")
-		args = vars(ap.parse_args())
-		pts = deque(maxlen=args["buffer"])
 
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -359,8 +355,7 @@ class FPV:
 				cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 					cv2.CHAIN_APPROX_SIMPLE)
 				cnts = imutils.grab_contours(cnts)
-				# print('x')
-				# loop over the contours
+
 				for c in cnts:
 					# if the contour is too small, ignore it
 					if cv2.contourArea(c) < 5000:
@@ -372,8 +367,7 @@ class FPV:
 					cv2.rectangle(frame_image, (x, y), (x + w, y + h), (128, 255, 0), 1)
 					text = "Occupied"
 					motionCounter += 1
-					#print(motionCounter)
-					#print(text)
+
 					LED.colorWipe(255,16,0)
 					lastMovtionCaptured = timestamp
 					switch.switch(1,1)
@@ -393,6 +387,7 @@ class FPV:
 				encoded, buffer = cv2.imencode('.jpg', frame_image)
 			jpg_as_text = base64.b64encode(buffer)
 			footage_socket.send(jpg_as_text)
+			print(jpg_as_text)
 
 			rawCapture.truncate(0)
 
