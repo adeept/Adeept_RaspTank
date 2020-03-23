@@ -65,6 +65,22 @@ for x in range(1,4):
 	if os.system("sudo pip3 install mpu6050-raspberrypi") == 0:
 		break
 
+for x in range(1,4):
+	if os.system("sudo pip3 install flask") == 0:
+		break
+
+for x in range(1,4):
+	if os.system("sudo pip3 install flask") == 0:
+		break
+
+for x in range(1,4):
+	if os.system("sudo pip3 install flask_cors") == 0:
+		break
+
+for x in range(1,4):
+	if os.system("sudo pip3 install websockets") == 0:
+		break
+
 try:
 	replace_num("/boot/config.txt",'#dtparam=i2c_arm=on','dtparam=i2c_arm=on\nstart_x=1\n')
 except:
@@ -108,7 +124,7 @@ for x in range(1,4):
 try:
 	os.system('sudo touch //home/pi/startup.sh')
 	with open("//home/pi/startup.sh",'w') as file_to_write:
-		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/server.py")
+		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/webServer.py")
 except:
 	pass
 
