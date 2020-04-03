@@ -124,7 +124,8 @@ for x in range(1,4):
 try:
 	os.system('sudo touch //home/pi/startup.sh')
 	with open("//home/pi/startup.sh",'w') as file_to_write:
-		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/webServer.py")
+		#file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/webServer.py")
+		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/server.py")
 except:
 	pass
 
