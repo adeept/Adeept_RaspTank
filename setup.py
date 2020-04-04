@@ -40,6 +40,8 @@ commands = [
     "sudo apt-get install -y python-dev python-pip libfreetype6-dev libjpeg-dev build-essential",
     "sudo apt-get install -y i2c-tools",
     "sudo apt-get install -y python3-smbus",
+    "sudo apt-get install -y libjasper-dev",
+    "sudo apt-get install -y libatlas-base-dev"
 ]
 
 for command in commands:
