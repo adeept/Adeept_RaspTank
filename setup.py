@@ -20,16 +20,6 @@ def replace_num(file,initial,new_num):
     with open(file,"w") as f:
         f.writelines(newline)
 
-for x in range(1,4):
-    if os.system() == 0:
-        break
-
-
-
-# for x in range(1,4):
-# 	if os.system("sudo apt-get -y upgrade") == 0:
-# 		break
-
 commands = [
     "sudo apt-get update",
     "sudo apt-get purge -y wolfram-engine",
@@ -47,7 +37,6 @@ commands = [
 for command in commands:
     if os.system(command) != 0:
         print("Error running installation step")
-
 
 try:
     replace_num("/boot/config.txt", '#dtparam=i2c_arm=on','dtparam=i2c_arm=on\nstart_x=1\n')
