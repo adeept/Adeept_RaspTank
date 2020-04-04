@@ -31,7 +31,8 @@ commands = [
     "sudo apt-get install -y i2c-tools",
     "sudo apt-get install -y python3-smbus",
     "sudo apt-get install -y libjasper-dev",
-    "sudo apt-get install -y libatlas-base-dev"
+    "sudo apt-get install -y libatlas-base-dev",
+    "sudo apt-get install -y libgstreamer1.0-0"
 ]
 
 for command in commands:
