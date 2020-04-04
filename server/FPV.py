@@ -172,6 +172,7 @@ class FPV:
 	def __init__(self):
 		self.frame_num = 0
 		self.fps = 0
+		switch.switchSetup()
 
 	def SetIP(self,invar):
 		self.IP = invar
