@@ -1,6 +1,5 @@
 adafruit-pca9685
 rpi_ws281x
-python3-smbus
 mpu6050-raspberrypi
 flask
 flask_cors
