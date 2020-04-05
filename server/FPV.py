@@ -375,14 +375,14 @@ class FPV:
 					motionCounter += 1
 					#print(motionCounter)
 					#print(text)
-					LED.colorWipe(255,16,0)
+					LED.colorWipe(Color(255,16,0))
 					lastMovtionCaptured = timestamp
 					switch.switch(1,1)
 					switch.switch(2,1)
 					switch.switch(3,1)
 
 				if (timestamp - lastMovtionCaptured).seconds >= 0.5:
-					LED.colorWipe(255,255,0)
+					LED.colorWipe(Color(255,255,0))
 					switch.switch(1,0)
 					switch.switch(2,0)
 					switch.switch(3,0)
