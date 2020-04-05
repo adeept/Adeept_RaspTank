@@ -99,7 +99,7 @@ def motor_left(status, direction, speed):#Motor 1 positive and negative rotation
 
 def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1  
 	speed = 100
-	print("%s-%s"%(direction,turn))
+	# print("%s-%s"%(direction,turn))
 	if direction == 'forward':
 		if turn == 'left':
 			motor_left(1, left_forward, speed)
