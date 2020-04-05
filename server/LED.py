@@ -2,14 +2,15 @@
 # File name   : LED.py
 # Description : WS_2812
 # Website     : based on the code from https://github.com/rpi-ws281x/rpi-ws281x-python/blob/master/examples/strandtest.py
+# E-mail      : support@adeept.com
 # Author      : original code by Tony DiCola (tony@tonydicola.com)
-# Date        : 2019/02/23
+# Date        : 2018/10/12
 import time
 from rpi_ws281x import *
 import argparse
 
 # LED strip configuration:
-LED_COUNT      = 3      # Number of LED pixels.
+LED_COUNT      = 16      # Number of LED pixels.
 LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -42,8 +43,5 @@ class LED:
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
             self.strip.show()
-            time.sleep(wait_ms / 1000.0)
+            time.sleep(wait_ms/1000.0)
 
-if __name__ == '__main__':
-    led = LED()
-    led.colorWipe(Color(0,0,255))

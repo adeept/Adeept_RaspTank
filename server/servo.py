@@ -1,245 +1,133 @@
 #!/usr/bin/env python3
 # File name   : servo.py
-# Description : Control Servos
+# Description : Control Motor
+# Product     : RaspTank  
+# Website     : www.adeept.com
+# E-mail      : support@adeept.com
 # Author      : William
-# Date        : 2019/02/23
+# Date        : 2018/12/27
 from __future__ import division
 import time
 import RPi.GPIO as GPIO
 import sys
 import Adafruit_PCA9685
-import ultra
-
-'''
-change this form 1 to 0 to reverse servos
-'''
-pwm0_direction = 1
-pwm1_direction = 1
-pwm2_direction = 1
-pwm3_direction = 1
-
 
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(50)
 
-pwm0_init = 300
-pwm0_max  = 450
-pwm0_min  = 150
-pwm0_pos  = pwm0_init
+def num_import_int(initial):		#Call this function to import data from '.txt' file
+	global r
+	with open("//etc/config.txt") as f:
+		for line in f.readlines():
+			if(line.find(initial) == 0):
+				r=line
+	begin=len(list(initial))
+	snum=r[begin:]
+	n=int(snum)
+	return n
 
-pwm1_init = 300
-pwm1_max  = 480
-pwm1_min  = 160
-pwm1_pos  = pwm1_init
+print('Loading...')
+for i in range(0,16):
+	exec('L%d_MAX=num_import_int("L%d_MAX:")'%(i,i))
+	exec('L%d_MIN=num_import_int("L%d_MIN:")'%(i,i))
+	for n in range(1,11):
+		exec('L%d_ST%d=num_import_int("L%d_ST%d:")'%(i,n,i,n))
+print('Setting up server...')
 
-pwm2_init = 300
-pwm2_max  = 500
-pwm2_min  = 100
-pwm2_pos  = pwm2_init
-
-pwm3_init = 300
-pwm3_max  = 500
-pwm3_min  = 300
-pwm3_pos  = pwm3_init
-
-org_pos = 300
-
-
-def radar_scan():
-	global pwm0_pos
-	scan_result = 'U: '
-	scan_speed = 1
-	if pwm0_direction:
-		pwm0_pos = pwm0_max
-		pwm.set_pwm(0, 0, pwm0_pos)
-		time.sleep(0.5)
-		scan_result += str(ultra.checkdist())
-		scan_result += ' '
-		while pwm0_pos>pwm0_min:
-			pwm0_pos-=scan_speed
-			pwm.set_pwm(0, 0, pwm0_pos)
-			scan_result += str(ultra.checkdist())
-			scan_result += ' '
-		pwm.set_pwm(0, 0, pwm0_init)
-	else:
-		pwm0_pos = pwm0_min
-		pwm.set_pwm(0, 0, pwm0_pos)
-		time.sleep(0.5)
-		scan_result += str(ultra.checkdist())
-		scan_result += ' '
-		while pwm0_pos<pwm0_max:
-			pwm0_pos+=scan_speed
-			pwm.set_pwm(0, 0, pwm0_pos)
-			scan_result += str(ultra.checkdist())
-			scan_result += ' '
-		pwm.set_pwm(0, 0, pwm0_init)
-	return scan_result
-
-
-
-
-
-def ctrl_range(raw, max_genout, min_genout):
-	if raw > max_genout:
-		raw_output = max_genout
-	elif raw < min_genout:
-		raw_output = min_genout
-	else:
-		raw_output = raw
-	return int(raw_output)
-
+org_pos = L11_ST1
 
 def camera_ang(direction, ang):
 	global org_pos
-	if ang == 'no':
-		ang = 50
-	if look_direction:
-		if direction == 'lookdown':
+	if ang == 0:
+		ang=4
+	if direction == 'lookdown':
+		if org_pos <= L11_MAX:
 			org_pos+=ang
-			org_pos = ctrl_range(org_pos, look_max, look_min)
-		elif direction == 'lookup':
+		else:
+			org_pos = L11_MAX
+	elif direction == 'lookup':
+		if org_pos >= L11_MIN:
 			org_pos-=ang
-			org_pos = ctrl_range(org_pos, look_max, look_min)
-		elif direction == 'home':
-			org_pos = 300
+		else:
+			org_pos = L11_MIN
+	elif direction == 'home':
+		org_pos = L11_MAX
 	else:
-		if direction == 'lookdown':
-			org_pos-=ang
-			org_pos = ctrl_range(org_pos, look_max, look_min)
-		elif direction == 'lookup':
-			org_pos+=ang
-			org_pos = ctrl_range(org_pos, look_max, look_min)
-		elif direction == 'home':
-			org_pos = 300	
-
-	pwm.set_all_pwm(0,org_pos)
+		pass
+	#print(ang)
+	pwm.set_pwm(11,0,org_pos)
 
 
-def lookleft(speed):
-	global pwm0_pos
-	if pwm0_direction:
-		pwm0_pos += speed
-		pwm0_pos = ctrl_range(pwm0_pos, pwm0_max, pwm0_min)
-		pwm.set_pwm(0, 0, pwm0_pos)
+def hand(command):
+	if command == 'in':
+		pwm.set_pwm(13, 0, L13_ST3)
+		pwm.set_pwm(12, 0, L12_ST4)
+		time.sleep(0.5)
+		pwm.set_pwm(13, 0, L13_ST2)
+		pwm.set_pwm(12, 0, L12_ST2)
+	elif command == 'out':
+		pwm.set_pwm(12, 0, L12_ST1)
+		pwm.set_pwm(13, 0, L13_ST1)
+
+
+def cir_pos(pos):
+	pwm.set_pwm(14, 0, L14_ST2+30*pos)
+
+
+def catch(pos):
+	pwm.set_pwm(15, 0, L15_ST2+10*pos)
+
+
+def hand_pos(pos):
+	if pos <= 4:
+		pwm.set_pwm(12, 0, L12_ST1-30*pos)
+		pwm.set_pwm(13, 0, L13_ST1-30*pos)
 	else:
-		pwm0_pos -= speed
-		pwm0_pos = ctrl_range(pwm0_pos, pwm0_max, pwm0_min)
-		pwm.set_pwm(0, 0, pwm0_pos)
-
-
-def lookright(speed):
-	global pwm0_pos
-	if pwm0_direction:
-		pwm0_pos -= speed
-		pwm0_pos = ctrl_range(pwm0_pos, pwm0_max, pwm0_min)
-		pwm.set_pwm(0, 0, pwm0_pos)
-	else:
-		pwm0_pos += speed
-		pwm0_pos = ctrl_range(pwm0_pos, pwm0_max, pwm0_min)
-		pwm.set_pwm(0, 0, pwm0_pos)
-
-
-def up(speed):
-	global pwm1_pos
-	if pwm1_direction:
-		pwm1_pos -= speed
-		pwm1_pos = ctrl_range(pwm1_pos, pwm1_max, pwm1_min)
-		pwm.set_pwm(1, 0, pwm1_pos)
-	else:
-		pwm1_pos += speed
-		pwm1_pos = ctrl_range(pwm1_pos, pwm1_max, pwm1_min)
-		pwm.set_pwm(1, 0, pwm1_pos)
-	#print(pwm1_pos)
-
-
-def down(speed):
-	global pwm1_pos
-	if pwm1_direction:
-		pwm1_pos += speed
-		pwm1_pos = ctrl_range(pwm1_pos, pwm1_max, pwm1_min)
-		pwm.set_pwm(1, 0, pwm1_pos)
-	else:
-		pwm1_pos -= speed
-		pwm1_pos = ctrl_range(pwm1_pos, pwm1_max, pwm1_min)
-		pwm.set_pwm(1, 0, pwm1_pos)
-	#print(pwm1_pos)
-
-def lookup(speed):
-	global pwm2_pos
-	if pwm2_direction:
-		pwm2_pos -= speed
-		pwm2_pos = ctrl_range(pwm2_pos, pwm2_max, pwm2_min)
-		pwm.set_pwm(2, 0, pwm2_pos)
-	else:
-		pwm2_pos += speed
-		pwm2_pos = ctrl_range(pwm2_pos, pwm2_max, pwm2_min)
-		pwm.set_pwm(2, 0, pwm2_pos)
-
-
-def lookdown(speed):
-	global pwm2_pos
-	if pwm2_direction:
-		pwm2_pos += speed
-		pwm2_pos = ctrl_range(pwm2_pos, pwm2_max, pwm2_min)
-		pwm.set_pwm(2, 0, pwm2_pos)
-	else:
-		pwm2_pos -= speed
-		pwm2_pos = ctrl_range(pwm2_pos, pwm2_max, pwm2_min)
-		pwm.set_pwm(2, 0, pwm2_pos)
-
-
-def grab(speed):
-	global pwm3_pos
-	if pwm3_direction:
-		pwm3_pos -= speed
-		pwm3_pos = ctrl_range(pwm3_pos, pwm3_max, pwm3_min)
-		pwm.set_pwm(3, 0, pwm3_pos)
-	else:
-		pwm3_pos += speed
-		pwm3_pos = ctrl_range(pwm3_pos, pwm3_max, pwm3_min)
-		pwm.set_pwm(3, 0, pwm3_pos)
-	print(pwm3_pos)
-
-
-def loose(speed):
-	global pwm3_pos
-	if pwm3_direction:
-		pwm3_pos += speed
-		pwm3_pos = ctrl_range(pwm3_pos, pwm3_max, pwm3_min)
-		pwm.set_pwm(3, 0, pwm3_pos)
-	else:
-		pwm3_pos -= speed
-		pwm3_pos = ctrl_range(pwm3_pos, pwm3_max, pwm3_min)
-		pwm.set_pwm(3, 0, pwm3_pos)
-	print(pwm3_pos)
-
-
-def servo_init():
-	pwm.set_pwm(0, 0, pwm0_pos)
-	pwm.set_pwm(1, 0, pwm1_pos)
-	pwm.set_pwm(2, 0, pwm2_max)
-	pwm.set_pwm(3, 0, pwm3_pos)
+		pwm.set_pwm(12, 0, (L12_ST1-24*pos))
+		pwm.set_pwm(13, 0, L13_ST3-6*(pos-4))
 
 
 def clean_all():
-	global pwm
-	pwm = Adafruit_PCA9685.PCA9685()
-	pwm.set_pwm_freq(50)
-	pwm.set_all_pwm(0, 0)
-
-
-def ahead():
-	global pwm0_pos, pwm1_pos
-	pwm.set_pwm(0, 0, pwm0_init)
-	pwm.set_pwm(1, 0, (pwm1_max-20))
-	pwm0_pos = pwm0_init
-	pwm1_pos = pwm1_max-20
-
-
-def get_direction():
-	return (pwm0_pos - pwm0_init)
+	pwm.set_pwm(0, 0, 0)
+	pwm.set_pwm(1, 0, 0)
+	pwm.set_pwm(2, 0, 0)
+	pwm.set_pwm(3, 0, 0)
+	pwm.set_pwm(4, 0, 0)
+	pwm.set_pwm(5, 0, 0)
+	pwm.set_pwm(6, 0, 0)
+	pwm.set_pwm(7, 0, 0)
+	pwm.set_pwm(8, 0, 0)
+	pwm.set_pwm(9, 0, 0)
+	pwm.set_pwm(10, 0, 0)
+	pwm.set_pwm(11, 0, 0)
+	pwm.set_pwm(12, 0, 0)
+	pwm.set_pwm(13, 0, 0)
+	pwm.set_pwm(14, 0, 0)
+	pwm.set_pwm(15, 0, 0)
 
 
 if __name__ == '__main__':
-	radar_scan()
-	pass
+	try:
+		pos_input = 0
+		OUT = 1
+		while 1:
+			a=input()
+			if OUT == 1:
+				if pos_input < 13:
+					pos_input+=1
+				else:
+					print('MAX')
+					OUT = 0
+			else:
+				if pos_input > 1:
+					pos_input-=1
+				else:
+					print('MIN')
+					OUT = 1
+			catch(pos_input)
+			print(pos_input)
+
+			pass
+	except KeyboardInterrupt:
+		clean_all()
+

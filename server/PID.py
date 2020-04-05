@@ -1,7 +1,8 @@
 #! /usr/bin/python
 # File name   : car_dir.py
 # Description : By controlling Servo,thecamera can move Up and down,left and right and the Ultrasonic wave can move to left and right.
-# Website     : www.gewbot.com
+# Website     : www.adeept.com
+# E-mail      : support@adeept.com
 # Author      : William
 # Date        : 2018/08/22
 import time

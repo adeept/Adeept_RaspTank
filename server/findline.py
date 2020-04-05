@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # File name   : findline.py
 # Description : line tracking 
-# Website     : www.gewbot.com
+# Website     : www.adeept.com
+# E-mail      : support@adeept.com
 # Author      : William
-# Date        : 2019/08/28
+# Date        : 2018/10/12
 import RPi.GPIO as GPIO
 import time
 import move
@@ -51,11 +52,13 @@ def run():
     if status_middle == 1:
         move.move(100, 'forward', 'no', 1)
     elif status_left == 1:
-        move.move(100, 'forward', 'right', 0.6)
+        move.move(100, 'no', 'right', 1)
     elif status_right == 1:
-        move.move(100, 'forward', 'left', 0.6)
+        move.move(100, 'no', 'left', 1)
     else:
         move.move(100, 'backward', 'no', 1)
+
+    time.sleep(0.2)
 
 if __name__ == '__main__':
     try:

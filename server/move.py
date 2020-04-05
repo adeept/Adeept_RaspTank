@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # File name   : move.py
 # Description : Control Motor
-# Product     : GWR
-# Website     : www.gewbot.com
+# Product     : RaspTank  
+# Website     : www.adeept.com
+# E-mail      : support@adeept.com
 # Author      : William
-# Date        : 2019/07/24
+# Date        : 2018/12/27
 import time
 import RPi.GPIO as GPIO
 
@@ -59,7 +60,7 @@ def setup():#Motor initialization
 		pass
 
 
-def motor_left(status, direction, speed):#Motor 2 positive and negative rotation
+def motor_right(status, direction, speed):#Motor 2 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_B_Pin1, GPIO.LOW)
 		GPIO.output(Motor_B_Pin2, GPIO.LOW)
@@ -77,7 +78,7 @@ def motor_left(status, direction, speed):#Motor 2 positive and negative rotation
 			pwm_B.ChangeDutyCycle(speed)
 
 
-def motor_right(status, direction, speed):#Motor 1 positive and negative rotation
+def motor_left(status, direction, speed):#Motor 1 positive and negative rotation
 	if status == 0: # stop
 		GPIO.output(Motor_A_Pin1, GPIO.LOW)
 		GPIO.output(Motor_A_Pin2, GPIO.LOW)
@@ -97,34 +98,34 @@ def motor_right(status, direction, speed):#Motor 1 positive and negative rotatio
 
 
 def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1  
-	#speed = 100
+	speed = 100
 	if direction == 'forward':
-		if turn == 'right':
+		if turn == 'left':
 			motor_left(0, left_backward, int(speed*radius))
 			motor_right(1, right_forward, speed)
-		elif turn == 'left':
+		elif turn == 'right':
 			motor_left(1, left_forward, speed)
 			motor_right(0, right_backward, int(speed*radius))
 		else:
-			motor_left(1, left_forward, speed)
-			motor_right(1, right_forward, speed)
+			motor_left(1, left_forward, 100)
+			motor_right(1, right_forward, 100)
 	elif direction == 'backward':
-		if turn == 'right':
+		if turn == 'left':
 			motor_left(0, left_forward, int(speed*radius))
 			motor_right(1, right_backward, speed)
-		elif turn == 'left':
+		elif turn == 'right':
 			motor_left(1, left_backward, speed)
 			motor_right(0, right_forward, int(speed*radius))
 		else:
 			motor_left(1, left_backward, speed)
 			motor_right(1, right_backward, speed)
 	elif direction == 'no':
-		if turn == 'right':
-			motor_left(1, left_backward, speed)
-			motor_right(1, right_forward, speed)
-		elif turn == 'left':
-			motor_left(1, left_forward, speed)
-			motor_right(1, right_backward, speed)
+		if turn == 'left':
+			motor_left(1, left_backward, 100)
+			motor_right(1, right_forward, 100)
+		elif turn == 'right':
+			motor_left(1, left_forward, 100)
+			motor_right(1, right_backward, 100)
 		else:
 			motorStop()
 	else:
@@ -140,12 +141,21 @@ def destroy():
 
 if __name__ == '__main__':
 	try:
-		speed_set = 60
 		setup()
-		move(speed_set, 'forward', 'no', 0.8)
-		time.sleep(1.3)
-		motorStop()
-		destroy()
+		
+		#move(100, 'no', 1)
+		#time.sleep(2.5)
+		#move(-100, 'no', 1)
+		#time.sleep(2.5)
+		#move(100, 'left', 0.6)
+		#time.sleep(5)
+		print('1')
+		
+		move(100, 'right', 0.6)
+		time.sleep(5)
+		#move(0, 'left', 1)
+		#time.sleep(5)
+
 	except KeyboardInterrupt:
 		destroy()
 
