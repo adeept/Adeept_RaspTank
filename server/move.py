@@ -15,10 +15,10 @@ import RPi.GPIO as GPIO
 Motor_A_EN    = 4
 Motor_B_EN    = 17
 
-Motor_A_Pin1  = 14
-Motor_A_Pin2  = 15
-Motor_B_Pin1  = 27
-Motor_B_Pin2  = 18
+Motor_A_Pin1  = 15
+Motor_A_Pin2  = 14
+Motor_B_Pin1  = 18
+Motor_B_Pin2  = 27
 
 Dir_forward   = 0
 Dir_backward  = 1
