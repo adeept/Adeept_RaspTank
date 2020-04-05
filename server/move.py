@@ -14,10 +14,10 @@ import RPi.GPIO as GPIO
 Motor_A_EN    = 4
 Motor_B_EN    = 17
 
-Motor_A_Pin1  = 14
-Motor_A_Pin2  = 15
-Motor_B_Pin1  = 27
-Motor_B_Pin2  = 18
+Motor_A_Pin1  = 15
+Motor_A_Pin2  = 14
+Motor_B_Pin1  = 18
+Motor_B_Pin2  = 27
 
 Dir_forward   = 0
 Dir_backward  = 1
@@ -97,34 +97,35 @@ def motor_right(status, direction, speed):#Motor 1 positive and negative rotatio
 
 
 def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1  
-	#speed = 100
+	speed = 100
+	# print("%s-%s"%(direction,turn))
 	if direction == 'forward':
 		if turn == 'right':
-			motor_left(0, left_backward, int(speed*radius))
+			motor_left(0, left_forward, speed)
 			motor_right(1, right_forward, speed)
 		elif turn == 'left':
 			motor_left(1, left_forward, speed)
-			motor_right(0, right_backward, int(speed*radius))
+			motor_right(0, right_forward, speed)
 		else:
-			motor_left(1, left_forward, speed)
-			motor_right(1, right_forward, speed)
+			motor_left(1, left_forward, 100)
+			motor_right(1, right_forward, 100)
 	elif direction == 'backward':
 		if turn == 'right':
+			motor_left(1, left_backward, speed)
+			motor_right(0, right_forward, int(speed * radius))
+		elif turn == 'left':
 			motor_left(0, left_forward, int(speed*radius))
 			motor_right(1, right_backward, speed)
-		elif turn == 'left':
-			motor_left(1, left_backward, speed)
-			motor_right(0, right_forward, int(speed*radius))
 		else:
 			motor_left(1, left_backward, speed)
 			motor_right(1, right_backward, speed)
 	elif direction == 'no':
 		if turn == 'right':
-			motor_left(1, left_backward, speed)
-			motor_right(1, right_forward, speed)
+			motor_left(1, left_backward, 100)
+			motor_right(1, right_forward, 100)
 		elif turn == 'left':
-			motor_left(1, left_forward, speed)
-			motor_right(1, right_backward, speed)
+			motor_left(1, left_forward, 100)
+			motor_right(1, right_backward, 100)
 		else:
 			motorStop()
 	else:
