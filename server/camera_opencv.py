@@ -11,7 +11,9 @@ import PID
 import time
 import threading
 import imutils
+import robotLight
 
+led = robotLight.RobotLight()
 pid = PID.PID()
 pid.SetKp(0.5)
 pid.SetKd(0)
@@ -177,15 +179,17 @@ class CVThread(threading.Thread):
             #print(motionCounter)
             #print(text)
             self.lastMovtionCaptured = timestamp
-            switch.switch(1,1)
-            switch.switch(2,1)
-            switch.switch(3,1)
+            led.setColor(255,78,0)
+            # switch.switch(1,1)
+            # switch.switch(2,1)
+            # switch.switch(3,1)
 
         if (timestamp - self.lastMovtionCaptured).seconds >= 0.5:
+            led.setColor(0,78,255)
             self.drawing = 0
-            switch.switch(1,0)
-            switch.switch(2,0)
-            switch.switch(3,0)
+            # switch.switch(1,0)
+            # switch.switch(2,0)
+            # switch.switch(3,0)
         self.pause()
 
 
@@ -302,14 +306,17 @@ class CVThread(threading.Thread):
             # CVThread.servoMove(CVThread.P_servo, CVThread.P_direction, error_X)
             CVThread.servoMove(CVThread.T_servo, CVThread.T_direction, error_Y)
 
-            if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
-                switch.switch(1,1)
-                switch.switch(2,1)
-                switch.switch(3,1)
+            # if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
+            if CVThread.Y_lock == 1:
+                led.setColor(255,78,0)
+                # switch.switch(1,1)
+                # switch.switch(2,1)
+                # switch.switch(3,1)
             else:
-                switch.switch(1,0)
-                switch.switch(2,0)
-                switch.switch(3,0)
+                led.setColor(0,78,255)
+                # switch.switch(1,0)
+                # switch.switch(2,0)
+                # switch.switch(3,0)
         else:
             self.findColorDetection = 0
             move.motorStop()
@@ -433,7 +440,10 @@ class Camera(BaseCamera):
                 else:
                     cvt.mode(Camera.modeSelect, img)
                     cvt.resume()
-                img = cvt.elementDraw(img)
+                try:
+                    img = cvt.elementDraw(img)
+                except:
+                    pass
             
 
 

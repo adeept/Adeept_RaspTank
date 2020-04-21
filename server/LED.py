@@ -9,7 +9,7 @@ from rpi_ws281x import *
 import argparse
 
 # LED strip configuration:
-LED_COUNT      = 3      # Number of LED pixels.
+LED_COUNT      = 12      # Number of LED pixels.
 LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -46,4 +46,4 @@ class LED:
 
 if __name__ == '__main__':
     led = LED()
-    led.colorWipe(0,0,255)
+    led.colorWipe(255,255,255)

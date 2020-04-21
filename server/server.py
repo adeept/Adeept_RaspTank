@@ -335,15 +335,7 @@ def run():
         elif 'headdown' == data:
             servo.camera_ang('lookdown',0)
         elif 'headhome' == data:
-            servo.camera_ang('home',0)
-            servo.hand('in')
-            servo.cir_pos(6)
-            pos_input = 1
-            catch_input = 1
-            cir_input = 6
-            servo.catch(catch_input)
-            time.sleep(0.5)
-            servo.clean_all()
+            servo.initPosAll()
 
         elif 'c_left' == data:
             if cir_input < 12:
@@ -411,6 +403,8 @@ def run():
             FindColorMode  = 0
             tcpCliSock.send(('FunEnd').encode())
             move.motorStop()
+            time.sleep(0.3)
+            move.motorStop()
 
         else:
             pass
@@ -427,7 +421,7 @@ if __name__ == '__main__':
 
     try:
         LED  = LED.LED()
-        LED.colorWipe(Color(255,16,0))
+        LED.colorWipe(255,16,0)
     except:
         print('Use "sudo pip3 install rpi_ws281x" to install WS_281x package')
         pass
@@ -477,11 +471,11 @@ if __name__ == '__main__':
             LED.colorWipe(0,80,255)
         except:
             pass
-
+    run()
     try:
         pwm.set_all_pwm(0,0)
         run()
     except:
-        LED.colorWipe(Color(0,0,0))
+        LED.colorWipe(0,0,0)
         servo.clean_all()
         move.destroy()

@@ -77,6 +77,8 @@ thisPath = "/" + os.path.dirname(curpath)
 direction_command = 'no'
 turn_command = 'no'
 
+scGear.moveInit()
+
 def servoPosInit():
     scGear.initConfig(0,init_pwm0,1)
     P_sc.initConfig(1,init_pwm1,1)
