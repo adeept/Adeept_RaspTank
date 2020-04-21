@@ -444,17 +444,17 @@ if __name__ == '__main__':
             ap_threading.setDaemon(True)                          #'True' means it is a front thread,it would close when the mainloop() closes
             ap_threading.start()                                  #Thread starts
 
-            LED.colorWipe(Color(0,16,50))
+            LED.colorWipe(0,16,50)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,100))
+            LED.colorWipe(0,16,100)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,150))
+            LED.colorWipe(0,16,150)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,200))
+            LED.colorWipe(0,16,200)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,255))
+            LED.colorWipe(0,16,255)
             time.sleep(1)
-            LED.colorWipe(Color(35,255,35))
+            LED.colorWipe(35,255,35)
 
         try:
             tcpSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -471,10 +471,10 @@ if __name__ == '__main__':
             fps_threading.start()                                     #Thread starts
             break
         except:
-            LED.colorWipe(Color(0,0,0))
+            LED.colorWipe(0,0,0)
 
         try:
-            LED.colorWipe(Color(0,80,255))
+            LED.colorWipe(0,80,255)
         except:
             pass
 

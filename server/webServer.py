@@ -25,7 +25,7 @@ import websockets
 import json
 import app
 
-OLED_connection = 1
+OLED_connection = 0
 try:
     import OLED
     screen = OLED.OLED_ctrl()
