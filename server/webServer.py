@@ -340,7 +340,8 @@ def update_code():
         config = json.load(f1)
         if not config['production']:
             print('Update code')
-            os.system(f'cd {projectPath} && sudo git pull')
+            # Force overwriting local code
+            os.system(f'cd {projectPath} && sudo git fetch --all && git reset --hard origin/master && git pull')
             config['production'] = True
             with open(f'{projectPath}/config.json', 'w') as f2:
                 json.dump(config, f2)
