@@ -333,17 +333,17 @@ def configPWM(command_input, response):
         G_sc.initConfig(4,300,1)
         replace_num('init_pwm4 = ', 300)
 
-
-# def update_code():
-#     # Update local to be consistent with remote
-#     with open('../config.json', 'w+') as f:
-#         config = json.load(f)
-#         if not config['production']:
-#             os.system('cd' + thisPath + '&& sudo git pull')
-#             config['production'] = True
-#         json.dump(config, f)
-
-
+def update_code():
+    # Update local to be consistent with remote
+    projectPath = thisPath[:-7]
+    with open('../config.json', 'r') as f1:
+        config = json.load(f1)
+        if not config['production']:
+            os.system('cd ' + projectPath + '&& sudo git pull')
+            config['production'] = True
+            with open('../config.json', 'w') as f2:
+                json.dump(config, f2)
+        
 def wifi_check():
     try:
         s =socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -351,14 +351,7 @@ def wifi_check():
         ipaddr_check=s.getsockname()[0]
         s.close()
         print(ipaddr_check)
-
-        with open('../config.json', 'w+') as f:
-            config = json.load(f)
-            if not config['production']:
-                os.system('cd' + thisPath + '&& sudo git pull')
-                config['production'] = True
-            json.dump(config, f)
-            
+   
         if OLED_connection:
             screen.screen_show(2, 'IP:'+ipaddr_check)
             screen.screen_show(3, 'AP MODE OFF')
