@@ -334,14 +334,14 @@ def configPWM(command_input, response):
         replace_num('init_pwm4 = ', 300)
 
 
-def update_code():
-    # Update local to be consistent with remote
-    with open('../config.json', 'w+') as f:
-        config = json.load(f)
-        if not config['production']:
-            os.system('cd' + thisPath + '&& sudo git pull')
-            config['production'] = True
-        json.dump(config, f)
+# def update_code():
+#     # Update local to be consistent with remote
+#     with open('../config.json', 'w+') as f:
+#         config = json.load(f)
+#         if not config['production']:
+#             os.system('cd' + thisPath + '&& sudo git pull')
+#             config['production'] = True
+#         json.dump(config, f)
 
 
 def wifi_check():
@@ -352,8 +352,13 @@ def wifi_check():
         s.close()
         print(ipaddr_check)
 
-        update_code()        
-
+        with open('../config.json', 'w+') as f:
+            config = json.load(f)
+            if not config['production']:
+                os.system('cd' + thisPath + '&& sudo git pull')
+                config['production'] = True
+            json.dump(config, f)
+            
         if OLED_connection:
             screen.screen_show(2, 'IP:'+ipaddr_check)
             screen.screen_show(3, 'AP MODE OFF')
