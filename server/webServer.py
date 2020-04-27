@@ -105,7 +105,7 @@ def FPV_thread():
 
 
 def ap_thread():
-    os.system("sudo create_ap wlan0 eth0 Groovy 12345678")
+    os.system("sudo create_ap wlan0 eth0 Adeept 12345678")
 
 
 def functionSelect(command_input, response):
