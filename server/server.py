@@ -359,21 +359,21 @@ def run():
             try:
                 set_R=data.split()
                 ws_R = int(set_R[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
         elif 'wsG' in data:
             try:
                 set_G=data.split()
                 ws_G = int(set_G[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
         elif 'wsB' in data:
             try:
                 set_B=data.split()
                 ws_B = int(set_B[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
 
