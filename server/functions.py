@@ -21,13 +21,13 @@ kalman_filter_X =  Kalman_filter.Kalman_filter(0.01,0.1)
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(50)
 
-MPU_connection = 1
-try:
-    sensor = mpu6050(0x68)
-    print('mpu6050 connected, PT MODE ON')
-except:
-    MPU_connection = 0
-    print('mpu6050 disconnected, ARM MODE ON')
+# MPU_connection = 1
+# try:
+#     sensor = mpu6050(0x68)
+#     print('mpu6050 connected, PT MODE ON')
+# except:
+#     MPU_connection = 0
+#     print('mpu6050 disconnected, ARM MODE ON')
 
 curpath = os.path.realpath(__file__)
 thisPath = "/" + os.path.dirname(curpath)
