@@ -275,7 +275,7 @@ class CVThread(threading.Thread):
                 CVThread.X_lock = 1
         elif ID == 11:
             errorGenOut = CVThread.kalman_filter_Y.kalman(errorInput)
-            CVThread.T_anglePos += 0.25*(errorGenOut*Dir)*CVThread.cameraDiagonalH/CVThread.videoH
+            CVThread.T_anglePos += 0.1*(errorGenOut*Dir)*CVThread.cameraDiagonalH/CVThread.videoH
 
             if abs(errorInput) > CVThread.tor:
                 CVThread.scGear.moveAngle(ID,CVThread.T_anglePos)
