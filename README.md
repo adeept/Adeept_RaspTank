@@ -68,7 +68,7 @@ This documentation is for software installation and operation guide for the Pyth
 4. Write the operating system for Raspberry Pi to the SD card with `Raspberry Pi Imager` `Raspbian Full - A port of Debian with desktop and recommended application`  
 5. Leave the SD card connected after writing is completed, we'll use for configuring SSH and WiFi connection later.
 
-**Detailed Steps: **  
+**Detailed Steps:**  
 
 - Open a web browser on your computer, go to the Raspberry Pi website [Official Raspberry Pi website](https://www.raspberrypi.org/downloads/ ), find and download the `Raspberry Pi Imager` for your computer OS, or click on the links above for the corresponding system to directly download and install.   
 
@@ -90,7 +90,7 @@ This documentation is for software installation and operation guide for the Pyth
 #### 2.1.2 Method B: Download the image file `Raspbian` and write it to the SD card manually
 Since the image file is downloaded with the `Raspberry Pi Imager` in **2.1.1**, it can take a long time due to a slow network in some places. You may then manually download the image file `Raspbian` and write it to the SD card with th `Raspberry Pi Imager`.  
 
-**Step-by-Step Overview**  
+**Step-by-Step Overview**
 
 1. Prepare an SD card (16G or larger) and an SD card reader
 2. Download the `Raspberry Pi Imager` on the official website [Official Raspberry Pi website](https://www.raspberrypi.org/downloads/ )
@@ -106,7 +106,7 @@ Since the image file is downloaded with the `Raspberry Pi Imager` in **2.1.1**, 
 6. Write the image file `Raspbian` downloaded to the SD card with `Raspberry Pi Imager`
 7. Leave the SD card connected after writing is completed, we'll use for configuring SSH and WiFi connection later.
 
-**Detailed Steps:**  
+**Detailed Steps:**
 
 - Open a web browser on your computer, go to the Raspberry Pi website[Official Raspberry Pi website], find and download the `Raspberry Pi Imager` for your computer OS, or click on the links above for the corresponding system to directly download and install.   
 
