@@ -106,11 +106,11 @@ Since the image file is downloaded with the `Raspberry Pi Imager` in **2.1.1**, 
 6. Write the image file `Raspbian` downloaded to the SD card with `Raspberry Pi Imager`
 7. Leave the SD card connected after writing is completed, we'll use for configuring SSH and WiFi connection later.
 
-**Detailed Steps: **  
+**Detailed Steps:**  
 
 - Open a web browser on your computer, go to the Raspberry Pi website[Official Raspberry Pi website], find and download the `Raspberry Pi Imager` for your computer OS, or click on the links above for the corresponding system to directly download and install.   
 
-  ![imagerDownload](README.assets/imagerDownload.png)
+  ![imagerDownload](images/imagerDownload.png)
 
 - On the Raspberry Pi website [Official Raspberry Pi website](https://www.raspberrypi.org/downloads/ ), select through `Downloads` -> `Raspbian` -> `Raspbian Buster with desktop and recommended software`, and click on the torrent or zip file to download. Unzip the file after download, be noted that the path should be in English for the `.img` file extracted, no special characters allowed; otherwise `Raspberry Pi Imager` may not open the `.img` file. It's recommended to save the `.img` file to the root directory of the `C:\` or `D:\` disk, **but do not save `.img` on the SD card**.  
 
@@ -144,7 +144,7 @@ The Raspbian image file downloaded in **2.1.1** and **2.1.2** is the official so
 6. Write the image file `Raspbian` downloaded to the SD card with `Raspberry Pi Imager`
 7. Leave the SD card connected after writing is completed, we'll use for configuring SSH and WiFi connection later.
 
-**Detailed Steps: **  
+**Detailed Steps:**  
 
 - Open a web browser on your computer, go to the Raspberry Pi website [Official Raspberry Pi website](https://www.raspberrypi.org/downloads/ ), find and download the `Raspberry Pi Imager` for your computer OS, or click on the links above for the corresponding system to directly download and install.  
 
@@ -287,11 +287,11 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
 
 - Type in `ssh pi@<IP>` in the command line, replace `<IP>` with the IP address of your Raspberry Pi as shown below:   
 
-    >ssh pi@192.168.3.157  
+    >ssh pi@192.168.3.161  
 
 - Press Enter key and a prompt will appear: `Are you sure you want to continue connecting (yes/no)?`  
 
-- Type in `yes`, press Enter and it'll show `pi@192.168.3.157's password:`, type in the initial password of the Raspberry Pi, `raspberry` (pay attention to capitalization). There's no change on the screen when you're typing in, but it doesn't mean you're not entering the information. Press <kbd>enter</kbd> after you finish typing in.   
+- Type in `yes`, press Enter and it'll show `pi@192.168.3.161's password:`, type in the initial password of the Raspberry Pi, `raspberry` (pay attention to capitalization). There's no change on the screen when you're typing in, but it doesn't mean you're not entering the information. Press <kbd>enter</kbd> after you finish typing in.   
 
 - So now you've logged into the Raspberry Pi.   
 
