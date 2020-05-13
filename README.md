@@ -8,7 +8,34 @@
 [Documentation for structure assembly]: https://www.adeept.com/learn/
 Getting Started with Raspberry Pi Robot and Python 
 ----
-[TOC]
+1. [Getting Started with Raspberry Pi Robot and Python](#getting-started-with-raspberry-pi-robot-and-python)
+2. [1. Premise](#1-premise)
+   1. [1.1 STEAM and Raspberry Pi](#11-steam-and-raspberry-pi)
+   2. [1.2 About the Documentation](#12-about-the-documentation)
+3. [2. Getting to Use the Raspberry Pi](#2-getting-to-use-the-raspberry-pi)
+   1. [2.1 Write the Raspberry Pi image to an SD card](#21-write-the-raspberry-pi-image-to-an-sd-card)
+      1. [2.1.1 Method A: Write 'Raspbian' to the SD card by `Raspberry Pi Imager`](#211-method-a-write-raspbian-to-the-sd-card-by-raspberry-pi-imager)
+      2. [2.1.2 Method B: Download the image file `Raspbian` and write it to the SD card manually](#212-method-b-download-the-image-file-raspbian-and-write-it-to-the-sd-card-manually)
+      3. [2.1.3 Method C: Manually download the image file provided by us and write it to the SD card (not recommended)](#213-method-c-manually-download-the-image-file-provided-by-us-and-write-it-to-the-sd-card-not-recommended)
+   2. [2.2 Enable SSH Server of Raspberry Pi](#22-enable-ssh-server-of-raspberry-pi)
+      1. [2.2.1 Method A: Enable SSH with peripherals](#221-method-a-enable-ssh-with-peripherals)
+      2. [2.2.2 Method A: Enable SSH without peripherals](#222-method-a-enable-ssh-without-peripherals)
+   3. [2.3 Configure WiFi on Raspberry Pi](#23-configure-wifi-on-raspberry-pi)
+      1. [2.3.1 Method A: WiFi connection with peripherals](#231-method-a-wifi-connection-with-peripherals)
+      2. [2.3.2 Method A: WiFi connection without peripherals](#232-method-a-wifi-connection-without-peripherals)
+4. [3 Software Installation & Operation on Raspberry Pi](#3-software-installation--operation-on-raspberry-pi)
+   1. [3.1 Log into Raspberry Pi (Windows 10)](#31-log-into-raspberry-pi-windows-10)
+   2. [3.2 Log into Raspberry Pi (Linux or Mac OS)](#32-log-into-raspberry-pi-linux-or-mac-os)
+   3. [3.3 Log into Raspberry Pi (Windows)](#33-log-into-raspberry-pi-windows)
+   4. [3.4 Download Program of the Raspberry Pi Robot](#34-download-program-of-the-raspberry-pi-robot)
+   5. [3.5 Install Corresponding Dependent Libraries](#35-install-corresponding-dependent-libraries)
+   6. [3.6 Run the Raspberry Pi Robot's Program](#36-run-the-raspberry-pi-robots-program)
+5. [4 Precautions for Structure Assembly](#4-precautions-for-structure-assembly)
+      1. [4.1 Documentation for structure assembly](#41-documentation-for-structure-assembly)
+      2. [4.2 Precautions for Structure Assembly](#42-precautions-for-structure-assembly)
+6. [5 Controlling Robot via WEB App](#5-controlling-robot-via-web-app)
+7. [6 Q&A](#6-qa)
+
 
 ## 1. Premise
 ### 1.1 STEAM and Raspberry Pi
@@ -18,41 +45,7 @@ As a board designed for computer programming education, Raspberry Pi has lots of
 ### 1.2 About the Documentation 
 This documentation is for software installation and operation guide for the Python robot product. It describes every detail of the whole process of fulfilling the robot project by Python and Raspberry Pi from scratch as well as some precautions. Hope you can get started with the Raspberry Pi robot on Python and make more creations with this documentation.   
 
-```mermaid
-graph TB
-A[2.1.1 Official tool download mirror] --> B{whether the Raspberry Pi has peripherals}
-B --> |Yes|D[2.2.1 Configure SSH]
-D --> F[2.3.1 Configure WIFI]
-B --> |None|E[2.2.2 Configure SSH]
-E --> G[2.3.2 Configure WIFI]
-H[2.1.2 download software download image] --> B
-
-
-J[2.1.3 Download the image file we provided] --> K{Raspberry Pi with or without peripherals}
-K --> |YES|L[2.3.1 Configure WIFI]
-K --> |NO|M[2.3.2 Configure WIFI]
-
-F --> N{computer system}
-G --> N
-L --> S[4 Assembly]
-M --> S[4 Assembly]
-
-N -->|Windows 10|P[3.1 Login Raspberry Pi]
-N -->|Linux or Mac|Q[3.2 Login Raspberry Pi]
-N -->|Windows|R[3.3 Login Raspberry Pi]
-
-P -->T[3.4 download program]
-Q -->T
-R -->T
-
-T -->U[3.5 installer]
-
-U -->V[3.6 running program]
-
-V -->S
-
-S -->W[5 Use WEB application to control the robot]
-```
+![mermaid](images/mermaid.png)
 
 
 
@@ -146,7 +139,7 @@ The Raspbian image file downloaded in **2.1.1** and **2.1.2** is the official so
     - [Raspberry Pi Imager for Ubuntu](https://downloads.raspberrypi.org/imager/imager_amd64.deb "Click here to download Raspberry Pi Imager for Ubuntu")
 3. Install the `Raspberry Pi Imager`
 4. Download the image file `Raspbian`
-    - [Image file for the Raspberry Pi Robot]([https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Ftomsun%5Fadeept%5Fonmicrosoft%5Fcom%2FDocuments%2FadeeptRaspTank&originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CaWc5SHRiZG9sMXdLQU83WTk5cFJWdz9ydGltZT1rUWxJeE9EMjEwZw](https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Ftomsun_adeept_onmicrosoft_com%2FDocuments%2FadeeptRaspTank&originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CaWc5SHRiZG9sMXdLQU83WTk5cFJWdz9ydGltZT1rUWxJeE9EMjEwZw))
+    - [Image file for the Raspberry Pi Robot](https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Ftomsun%5Fadeept%5Fonmicrosoft%5Fcom%2FDocuments%2FadeeptRaspTank&originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CaWc5SHRiZG9sMXdLQU83WTk5cFJWdz9ydGltZT1rUWxJeE9EMjEwZw)
 5. Unzip the file, be noted that the path should be in English for the `.img` file extracted, no special characters allowed.
 6. Write the image file `Raspbian` downloaded to the SD card with `Raspberry Pi Imager`
 7. Leave the SD card connected after writing is completed, we'll use for configuring SSH and WiFi connection later.
@@ -157,7 +150,7 @@ The Raspbian image file downloaded in **2.1.1** and **2.1.2** is the official so
 
   ![imagerDownload](images/imagerDownload.png)
 
-- Go to our [official website](https://www.adeept.com/ ), find and download the image file [Image file for the Raspberry Pi Robot](https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CVVBlTWs3cTVBc3RSWVY2VlJicXpfUT9ydGltZT1qd3dRRjYzczEwZw&viewid=f04ef9e6%2D3179%2D44a4%2Dac50%2D79468fbcc893&id=%2Fpersonal%2Ftomsun%5Fadeept%5Fonmicrosoft%5Fcom%2FDocuments%2FadeeptRaspTank](https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CVVBlTWs3cTVBc3RSWVY2VlJicXpfUT9ydGltZT1qd3dRRjYzczEwZw&viewid=f04ef9e6-3179-44a4-ac50-79468fbcc893&id=%2Fpersonal%2Ftomsun_adeept_onmicrosoft_com%2FDocuments%2FadeeptRaspTank). Unzip the file, be noted that the path should be in English for the `.img` file extracted, no special characters allowed. otherwise `Raspberry Pi Imager` may not open the `.img` file. It's recommended to save the `.img` file to the root directory of the `C:\` or `D:\` disk, **but do not save `.img` on the SD card**.  
+- Go to our [official website](https://www.adeept.com/ ), find and download the image file - [Image file for the Raspberry Pi Robot](https://adeept-my.sharepoint.com/personal/tomsun_adeept_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Ftomsun%5Fadeept%5Fonmicrosoft%5Fcom%2FDocuments%2FadeeptRaspTank&originalPath=aHR0cHM6Ly9hZGVlcHQtbXkuc2hhcmVwb2ludC5jb20vOmY6L2cvcGVyc29uYWwvdG9tc3VuX2FkZWVwdF9vbm1pY3Jvc29mdF9jb20vRXZCZmhES1dJVEJLb1ZLejFJTThta01CaWc5SHRiZG9sMXdLQU83WTk5cFJWdz9ydGltZT1rUWxJeE9EMjEwZw). Unzip the file, be noted that the path should be in English for the `.img` file extracted, no special characters allowed. otherwise `Raspberry Pi Imager` may not open the `.img` file. It's recommended to save the `.img` file to the root directory of the `C:\` or `D:\` disk, **but do not save `.img` on the SD card**.  
 
 - Insert the SD card into the card reader, connect the card reader and your computer.   
 
