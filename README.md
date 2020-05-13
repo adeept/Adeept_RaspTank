@@ -23,18 +23,18 @@ Getting Started with Raspberry Pi Robot and Python
        * [2.3 Configure WiFi on Raspberry Pi](#23-configure-wifi-on-raspberry-pi)
           * [2.3.1 Method A: WiFi connection with peripherals](#231-method-a-wifi-connection-with-peripherals)
           * [2.3.2 Method A: WiFi connection without peripherals](#232-method-a-wifi-connection-without-peripherals)
-    * [3 Software Installation &amp; Operation on Raspberry Pi](#3-software-installation--operation-on-raspberry-pi)
+    * [3. Software Installation &amp; Operation on Raspberry Pi](#3-software-installation--operation-on-raspberry-pi)
        * [3.1 Log into Raspberry Pi (Windows 10)](#31-log-into-raspberry-pi-windows-10)
        * [3.2 Log into Raspberry Pi (Linux or Mac OS)](#32-log-into-raspberry-pi-linux-or-mac-os)
        * [3.3 Log into Raspberry Pi (Windows)](#33-log-into-raspberry-pi-windows)
        * [3.4 Download Program of the Raspberry Pi Robot](#34-download-program-of-the-raspberry-pi-robot)
        * [3.5 Install Corresponding Dependent Libraries](#35-install-corresponding-dependent-libraries)
        * [3.6 Run the Raspberry Pi Robot's Program](#36-run-the-raspberry-pi-robots-program)
-    * [4 Precautions for Structure Assembly](#4-precautions-for-structure-assembly)
+    * [4. Precautions for Structure Assembly](#4-precautions-for-structure-assembly)
           * [4.1 Documentation for structure assembly](#41-documentation-for-structure-assembly)
           * [4.2 Precautions for Structure Assembly](#42-precautions-for-structure-assembly)
-    * [5 Controlling Robot via WEB App](#5-controlling-robot-via-web-app)
-    * [6 Q&amp;A](#6-qa)
+    * [5. Controlling Robot via WEB App](#5-controlling-robot-via-web-app)
+    * [6. Q&amp;A](#6-qa)
 
 
 ## 1. Premise
@@ -239,7 +239,7 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
     
     7. For more about the file `wpa_supplicant.conf`, refer to the official documentation [WIRELESS-CLI](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 
-## 3 Software Installation & Operation on Raspberry Pi 
+## 3. Software Installation & Operation on Raspberry Pi 
 - If you followed the steps in **2.2.1** and **2.3.1** for SSH and WiFi configuration, you may remove the peripherals now and use SSH to remotely control the Raspberry Pi later on.   
 
 - If you followed the steps in **2.2.2** and **2.3.2**, you may now insert the SD card into the Raspberry Pi and boot it up. The Raspberry Pi will auto boot and connect WiFi when powered on, with no need of peripherals.
@@ -360,7 +360,7 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
 
 - Check whether there's any error and solve them based on instructions in the Q&A section below.   
 
-## 4 Precautions for Structure Assembly
+## 4. Precautions for Structure Assembly
 #### 4.1 Documentation for structure assembly
 - [Documentation for structure assembly](https://www.adeept.com/learn)
 
@@ -373,7 +373,7 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
 
 - When booting (it may take 30-50s), it takes a while for the Raspberry Pi to control PCA9685 to set signal of all servo ports for central position rotating. 
 
-## 5 Controlling Robot via WEB App
+## 5. Controlling Robot via WEB App
 
 - The WEB app is developed for common users to control the robot in an easier way. It's convenient to use WEB app; you may use it to wirelessly control the robot on any device with a web browser (Google Chrome was used for testing).  
 
@@ -425,7 +425,7 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
 
 ![webControl](images/webControl.png)
 
-## 6 Q&A
+## 6. Q&A
 
 - Where to find the IP address of the Raspberry Pi?
 
