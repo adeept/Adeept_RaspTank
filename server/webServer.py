@@ -332,7 +332,7 @@ def configPWM(command_input, response):
 
         G_sc.initConfig(4,300,1)
         replace_num('init_pwm4 = ', 300)
-
+'''
 def update_code():
     # Update local to be consistent with remote
     projectPath = thisPath[:-7]
@@ -345,7 +345,7 @@ def update_code():
                 print('Update successfully')
                 print('Restarting...')
                 os.system('sudo reboot')
-        
+'''   
 def wifi_check():
     try:
         s =socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -353,7 +353,7 @@ def wifi_check():
         ipaddr_check=s.getsockname()[0]
         s.close()
         print(ipaddr_check)
-        update_code()
+    #    update_code()
         if OLED_connection:
             screen.screen_show(2, 'IP:'+ipaddr_check)
             screen.screen_show(3, 'AP MODE OFF')
