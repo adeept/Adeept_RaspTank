@@ -251,10 +251,12 @@ def robotCtrl(command_input, response):
 
     elif 'handup' == command_input:
         H1_sc.singleServo(12, 1, 7)
+        
         H2_sc.singleServo(13, 1, 7)
 
     elif 'handdown' == command_input:
         H1_sc.singleServo(12, -1, 7)
+
         H2_sc.singleServo(13, -1, 7)
 
     elif 'HAstop' in command_input:
