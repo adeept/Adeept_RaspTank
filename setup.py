@@ -103,6 +103,9 @@ for x in range(1,4):
 	if os.system("sudo pip3 install imutils zmq pybase64 psutil") == 0:   ####
 		break
 
+# Would be better to move to using requirements.txt for dependencies?
+os.system('sudo pip3 install RPi.GPIO')
+		
 for x in range(1,4):
 	if os.system("sudo git clone https://github.com/oblique/create_ap") == 0:
 		break
@@ -129,6 +132,7 @@ try:
 # 		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/server.py")
 except:
 	pass
+
 
 os.system('sudo chmod 777 //home/pi/startup.sh')
 
