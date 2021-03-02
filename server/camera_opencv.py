@@ -430,6 +430,8 @@ class Camera(BaseCamera):
         while True:
             # read current frame
             _, img = camera.read()
+            if img.all is None:
+                continue
 
             if Camera.modeSelect == 'none':
                 switch.switch(1,0)
@@ -448,4 +450,5 @@ class Camera(BaseCamera):
 
 
             # encode as a jpeg image and return it
-            yield cv2.imencode('.jpg', img)[1].tobytes()
+            if cv2.imencode('.jpg', img)[0]:
+                yield cv2.imencode('.jpg', img)[1].tobytes()
