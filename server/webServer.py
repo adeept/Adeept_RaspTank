@@ -533,7 +533,7 @@ if __name__ == '__main__':
         RL=robotLight.RobotLight()
         RL.start()
         RL.breath(70,70,255)
-    except:
+    except ModuleNotFoundError as e:
         print('Use "sudo pip3 install rpi_ws281x" to install WS_281x package\n使用"sudo pip3 install rpi_ws281x"命令来安装rpi_ws281x')
         pass
 

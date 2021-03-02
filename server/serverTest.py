@@ -18,8 +18,7 @@ from rpi_ws281x import *
 import argparse
 import os
 import ultra
-import FPV
-import psutil
+#import psutil
 import servo
 import LED
 import findline
@@ -28,7 +27,6 @@ step_set = 1
 speed_set = 100
 rad = 0.6
 
-new_frame = 0
 direction_command = 'no'
 turn_command = 'no'
 #pwm = Adafruit_PCA9685.PCA9685()
@@ -40,137 +38,6 @@ cir_input = 6
 ultrasonicMode = 0
 FindLineMode = 0
 FindColorMode = 0
-
-
-def app_ctrl():
-    app_HOST = ''
-    app_PORT = 10123
-    app_BUFSIZ = 1024
-    app_ADDR = (app_HOST, app_PORT)
-
-    AppSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    AppSerSock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-    AppSerSock.bind(app_ADDR)
-
-    def setup():
-        move.setup()
-
-    def appCommand(data_input):
-        global direction_command, turn_command, pos_input, catch_input, cir_input
-        if data_input == 'forwardStart\n':
-            direction_command = 'forward'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif data_input == 'backwardStart\n':
-            direction_command = 'backward'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif data_input == 'leftStart\n':
-            turn_command = 'left'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif data_input == 'rightStart\n':
-            turn_command = 'right'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif 'forwardStop' in data_input:
-            direction_command = 'no'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif 'backwardStop' in data_input:
-            direction_command = 'no'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif 'leftStop' in data_input:
-            turn_command = 'no'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-        elif 'rightStop' in data_input:
-            turn_command = 'no'
-            move.move(speed_set, direction_command, turn_command, rad)
-
-
-        if data_input == 'lookLeftStart\n':
-            if cir_input < 12:
-                cir_input+=1
-            servo.cir_pos(cir_input)
-
-        elif data_input == 'lookRightStart\n': 
-            if cir_input > 1:
-                cir_input-=1
-            servo.cir_pos(cir_input)
-
-        elif data_input == 'downStart\n':
-            servo.camera_ang('lookdown',10)
-
-        elif data_input == 'upStart\n':
-            servo.camera_ang('lookup',10)
-
-        elif 'lookLeftStop' in data_input:
-            pass
-        elif 'lookRightStop' in data_input:
-            pass
-        elif 'downStop' in data_input:
-            pass
-        elif 'upStop' in data_input:
-            pass
-
-
-        if data_input == 'aStart\n':
-            if pos_input < 17:
-                pos_input+=1
-            servo.hand_pos(pos_input)
-
-        elif data_input == 'bStart\n':
-            if pos_input > 1:
-                pos_input-=1
-            servo.hand_pos(pos_input)
-
-        elif data_input == 'cStart\n':
-            if catch_input < 13:
-                catch_input+=3
-            servo.catch(catch_input)
-
-        elif data_input == 'dStart\n':
-            if catch_input > 1:
-                catch_input-=3
-            servo.catch(catch_input)
-
-        elif 'aStop' in data_input:
-            pass
-        elif 'bStop' in data_input:
-            pass
-        elif 'cStop' in data_input:
-            pass
-        elif 'dStop' in data_input:
-            pass
-
-        print(data_input)
-
-    def appconnect():
-        global AppCliSock, AppAddr
-        AppSerSock.listen(5)
-        print('waiting for App connection...')
-        AppCliSock, AppAddr = AppSerSock.accept()
-        print('...App connected from :', AppAddr)
-
-    appconnect()
-    setup()
-    app_threading=threading.Thread(target=appconnect)         #Define a thread for FPV and OpenCV
-    app_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
-    app_threading.start()                                     #Thread starts
-
-    while 1:
-        data = ''
-        data = str(AppCliSock.recv(app_BUFSIZ).decode())
-        if not data:
-            continue
-        appCommand(data)
-        pass
-
-AppConntect_threading=threading.Thread(target=app_ctrl)         #Define a thread for FPV and OpenCV
-AppConntect_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
-AppConntect_threading.start()                                     #Thread starts
 
 
 def findline_thread():       #Line tracking mode
@@ -250,20 +117,12 @@ def ultra_send_client():
     while 1:
         while ultrasonicMode:
             try:
-                if not FindColorMode:
-                    ultra_Socket.send(str(round(ultra.checkdist(),2)).encode())
-                    time.sleep(0.5)
-                    continue
-                fpv.UltraData(round(ultra.checkdist(),2))
-                time.sleep(0.2)
+                ultra_Socket.send(str(round(ultra.checkdist(),2)).encode())
+                time.sleep(0.5)
+                continue
             except:
                 pass
         time.sleep(0.5)
-
-
-def FPV_thread():
-    fpv=FPV.FPV()
-    fpv.capture_thread(addr[0])
 
 
 def  ap_thread():
@@ -335,7 +194,15 @@ def run():
         elif 'headdown' == data:
             servo.camera_ang('lookdown',0)
         elif 'headhome' == data:
-            servo.initPosAll()
+            servo.camera_ang('home',0)
+            servo.hand('in')
+            servo.cir_pos(6)
+            pos_input = 1
+            catch_input = 1
+            cir_input = 6
+            servo.catch(catch_input)
+            time.sleep(0.5)
+            servo.clean_all()
 
         elif 'c_left' == data:
             if cir_input < 12:
@@ -359,33 +226,30 @@ def run():
             try:
                 set_R=data.split()
                 ws_R = int(set_R[1])
-                LED.colorWipe(ws_R,ws_G,ws_B)
+                LED.colorWipe(Color(ws_R,ws_G,ws_B))
             except:
                 pass
         elif 'wsG' in data:
             try:
                 set_G=data.split()
                 ws_G = int(set_G[1])
-                LED.colorWipe(ws_R,ws_G,ws_B)
+                LED.colorWipe(Color(ws_R,ws_G,ws_B))
             except:
                 pass
         elif 'wsB' in data:
             try:
                 set_B=data.split()
                 ws_B = int(set_B[1])
-                LED.colorWipe(ws_R,ws_G,ws_B)
+                LED.colorWipe(Color(ws_R,ws_G,ws_B))
             except:
                 pass
 
         elif 'FindColor' in data:
-            fpv.FindColor(1)
-            FindColorMode = 1
-            ultrasonicMode = 1
-            tcpCliSock.send(('FindColor').encode())
+            FindColorMode = 0
+            tcpCliSock.send(('FunEnd').encode())
 
         elif 'WatchDog' in data:
-            fpv.WatchDog(1)
-            tcpCliSock.send(('WatchDog').encode())
+            tcpCliSock.send(('FunEnd').encode())
 
         elif 'steady' in data:
             ultrasonicMode = 1
@@ -396,19 +260,14 @@ def run():
             tcpCliSock.send(('FindLine').encode())
 
         elif 'funEnd' in data:
-            fpv.FindColor(0)
-            fpv.WatchDog(0)
             ultrasonicMode = 0
             FindLineMode   = 0
             FindColorMode  = 0
             tcpCliSock.send(('FunEnd').encode())
             move.motorStop()
-            time.sleep(0.3)
-            move.motorStop()
 
         else:
             pass
-        #print(data)
 
 
 if __name__ == '__main__':
@@ -417,7 +276,6 @@ if __name__ == '__main__':
     PORT = 10223                              #Define port serial 
     BUFSIZ = 1024                             #Define buffer size
     ADDR = (HOST, PORT)
-    pwm.set_all_pwm(0,300)
 
     try:
         LED  = LED.LED()
@@ -438,17 +296,17 @@ if __name__ == '__main__':
             ap_threading.setDaemon(True)                          #'True' means it is a front thread,it would close when the mainloop() closes
             ap_threading.start()                                  #Thread starts
 
-            LED.colorWipe(0,16,50)
+            LED.colorWipe(Color(0,16,50))
             time.sleep(1)
-            LED.colorWipe(0,16,100)
+            LED.colorWipe(Color(0,16,100))
             time.sleep(1)
-            LED.colorWipe(0,16,150)
+            LED.colorWipe(Color(0,16,150))
             time.sleep(1)
-            LED.colorWipe(0,16,200)
+            LED.colorWipe(Color(0,16,200))
             time.sleep(1)
-            LED.colorWipe(0,16,255)
+            LED.colorWipe(Color(0,16,255))
             time.sleep(1)
-            LED.colorWipe(35,255,35)
+            LED.colorWipe(Color(35,255,35))
 
         try:
             tcpSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -458,24 +316,18 @@ if __name__ == '__main__':
             print('waiting for connection...')
             tcpCliSock, addr = tcpSerSock.accept()
             print('...connected from :', addr)
-
-            fpv=FPV.FPV()
-            fps_threading=threading.Thread(target=FPV_thread)         #Define a thread for FPV and OpenCV
-            fps_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
-            fps_threading.start()                                     #Thread starts
             break
         except:
-            LED.colorWipe(0,0,0)
+            LED.colorWipe(Color(0,0,0))
 
         try:
-            LED.colorWipe(0,80,255)
+            LED.colorWipe(Color(0,80,255))
         except:
             pass
-    run()
+
     try:
-        pwm.set_all_pwm(0,0)
         run()
     except:
-        LED.colorWipe(0,0,0)
         servo.clean_all()
         move.destroy()
+        LED.colorWipe(Color(0,0,0))
