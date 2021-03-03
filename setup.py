@@ -70,7 +70,6 @@ for x in range(3):
             mark_2 = 1
     if mark_2 == 0:
         break
-	
 
 commands_3 = [
     "sudo pip3 install numpy",
@@ -96,11 +95,11 @@ except:
 
 
 try:
-	os.system('sudo touch //home/pi/startup.sh')
-	with open("//home/pi/startup.sh",'w') as file_to_write:
-		#you can choose how to control the robot
-		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/webServer.py")
-# 		file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/server.py")
+    os.system('sudo touch //home/pi/startup.sh')
+    with open("//home/pi/startup.sh",'w') as file_to_write:
+        #you can choose how to control the robot
+        file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/webServer.py")
+#       file_to_write.write("#!/bin/sh\nsudo python3 " + thisPath + "/server/server.py")
 except:
     pass
 
