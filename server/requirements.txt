@@ -10,3 +10,4 @@ imutils
 zmq
 pybase64
 psutil
+luma.oled
