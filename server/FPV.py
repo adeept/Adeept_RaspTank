@@ -41,7 +41,6 @@ class FPV:
     def __init__(self):
         self.frame_num = 0
         self.fps = 0
-        switch.switchSetup()
 
         self.colorUpper = (44, 255, 255)
         self.colorLower = (24, 100, 100)
