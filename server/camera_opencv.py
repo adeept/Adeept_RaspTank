@@ -26,6 +26,8 @@ lineColorSet = 255
 frameRender = 1
 findLineError = 20
 
+ImgIsNone = 0
+
 colorUpper = np.array([44, 255, 255])
 colorLower = np.array([24, 100, 100])
 
@@ -430,7 +432,11 @@ class Camera(BaseCamera):
         while True:
             # read current frame
             _, img = camera.read()
-            if img.all is None:
+            if img is None:
+                if ImgIsNone == 0:
+                    print("The camera has not read data, please check whether the camera can be used normally.")
+                    print("Use the command: 'raspistill -t 1000 -o image.jpg' to check whether the camera can be used correctly.")
+                    ImgIsNone = 1
                 continue
 
             if Camera.modeSelect == 'none':
