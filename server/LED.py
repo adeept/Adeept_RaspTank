@@ -37,13 +37,23 @@ class LED:
         self.strip.begin()
 
     # Define functions which animate LEDs in various ways.
-    def colorWipe(self, color, wait_ms=0):
+    def colorWipe(self, R, G, B):
         """Wipe color across display a pixel at a time."""
+        color = Color(R,G,B)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
             self.strip.show()
-            time.sleep(wait_ms / 1000.0)
+            # time.sleep(wait_ms / 1000.0)
 
 if __name__ == '__main__':
     led = LED()
-    led.colorWipe(Color(0,0,255))
+    try:  
+        while True:  
+            led.colorWipe(255, 0, 0)  # red
+            time.sleep(1)  
+            led.colorWipe(0, 255, 0)  # green
+            time.sleep(1)  
+            led.colorWipe(0, 0, 255)  # blue
+            time.sleep(1) 
+    except:  
+        led.colorWipe(0,0,0)  # Lights out
