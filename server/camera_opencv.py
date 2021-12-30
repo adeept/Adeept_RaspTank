@@ -422,6 +422,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames():
+        global ImgIsNone
         camera = cv2.VideoCapture(Camera.video_source)
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
@@ -435,6 +436,7 @@ class Camera(BaseCamera):
             if img is None:
                 if ImgIsNone == 0:
                     print("The camera has not read data, please check whether the camera can be used normally.")
+                    print("Use the command: 'raspistill -t 1000 -o image.jpg'. Close the self-starting program webServer.py")
                     print("Use the command: 'raspistill -t 1000 -o image.jpg' to check whether the camera can be used correctly.")
                     ImgIsNone = 1
                 continue
