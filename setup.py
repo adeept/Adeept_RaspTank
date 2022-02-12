@@ -55,7 +55,7 @@ for x in range(3):
 commands_2 = [
     "sudo pip3 install RPi.GPIO",
     "sudo apt-get -y install libqtgui4 libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqt4-test",
-    "sudo pip3 install -r server/requirements.txt",
+    "sudo pip3 install -r //home/pi/adeept_rasptank/server/requirements.txt",
     "sudo git clone https://github.com/oblique/create_ap",
     "cd " + thisPath + "/create_ap && sudo make install",
     "cd //home/pi/create_ap && sudo make install",
@@ -73,7 +73,8 @@ for x in range(3):
 
 commands_3 = [
     "sudo pip3 install numpy",
-    "sudo pip3 install opencv-contrib-python==3.4.3.18",
+    # "sudo pip3 install opencv-contrib-python==3.4.3.18",
+    "sudo pip3 install opencv-contrib-python==3.4.17.61",
     "sudo pip3 install imutils zmq pybase64 psutil"
 ]
 
