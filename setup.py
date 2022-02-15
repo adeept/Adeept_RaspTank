@@ -73,8 +73,8 @@ for x in range(3):
 
 commands_3 = [
     "sudo pip3 install numpy",
-    # "sudo pip3 install opencv-contrib-python==3.4.3.18",
-    "sudo pip3 install opencv-contrib-python==3.4.17.61",
+    "sudo pip3 install opencv-contrib-python==3.4.3.18",
+    # "sudo pip3 install opencv-contrib-python==3.4.17.61",
     "sudo pip3 install imutils zmq pybase64 psutil"
 ]
 
@@ -115,9 +115,10 @@ try: #fix conflict with onboard Raspberry Pi audio
         file_to_write.write("blacklist snd_bcm2835")
 except:
     pass
-
-os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //etc/config.txt")
-
+try:
+    os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //etc/config.txt")
+except:
+    os.system("sudo cp -f "+ thisPath  +"/adeept_rasptank/server/config.txt //etc/config.txt")
 print('The program in Raspberry Pi has been installed, disconnected and restarted. \nYou can now power off the Raspberry Pi to install the camera and driver board (Robot HAT). \nAfter turning on again, the Raspberry Pi will automatically run the program to set the servos port signal to turn the servos to the middle position, which is convenient for mechanical assembly.')
 print('restarting...')
 os.system("sudo reboot")
