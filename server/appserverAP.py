@@ -13,7 +13,7 @@ import move
 import servo
 
 LED  = LED.LED()
-LED.colorWipe(Color(80,255,0))
+LED.colorWipe(80,255,0)
 
 step_set = 1
 speed_set = 100
@@ -151,17 +151,17 @@ def app_ctrl():
             ap_threading.setDaemon(True)                          #'True' means it is a front thread,it would close when the mainloop() closes
             ap_threading.start()                                  #Thread starts
 
-            LED.colorWipe(Color(0,16,50))
+            LED.colorWipe(0,16,50)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,100))
+            LED.colorWipe(0,16,100)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,150))
+            LED.colorWipe(0,16,150)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,200))
+            LED.colorWipe(0,16,200)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,255))
+            LED.colorWipe(0,16,255)
             time.sleep(1)
-            LED.colorWipe(Color(35,255,35))
+            LED.colorWipe(35,255,35)
 
             AppSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             AppSerSock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)

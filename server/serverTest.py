@@ -226,21 +226,21 @@ def run():
             try:
                 set_R=data.split()
                 ws_R = int(set_R[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
         elif 'wsG' in data:
             try:
                 set_G=data.split()
                 ws_G = int(set_G[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
         elif 'wsB' in data:
             try:
                 set_B=data.split()
                 ws_B = int(set_B[1])
-                LED.colorWipe(Color(ws_R,ws_G,ws_B))
+                LED.colorWipe(ws_R,ws_G,ws_B)
             except:
                 pass
 
@@ -279,7 +279,7 @@ if __name__ == '__main__':
 
     try:
         LED  = LED.LED()
-        LED.colorWipe(Color(255,16,0))
+        LED.colorWipe(255,16,0)
     except ModuleNotFoundError as e:
         print('Use "sudo pip3 install rpi_ws281x" to install WS_281x package')
         pass
@@ -296,17 +296,17 @@ if __name__ == '__main__':
             ap_threading.setDaemon(True)                          #'True' means it is a front thread,it would close when the mainloop() closes
             ap_threading.start()                                  #Thread starts
 
-            LED.colorWipe(Color(0,16,50))
+            LED.colorWipe(0,16,50)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,100))
+            LED.colorWipe(0,16,100)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,150))
+            LED.colorWipe(0,16,150)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,200))
+            LED.colorWipe(0,16,200)
             time.sleep(1)
-            LED.colorWipe(Color(0,16,255))
+            LED.colorWipe(0,16,255)
             time.sleep(1)
-            LED.colorWipe(Color(35,255,35))
+            LED.colorWipe(35,255,35)
 
         try:
             tcpSerSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -318,10 +318,10 @@ if __name__ == '__main__':
             print('...connected from :', addr)
             break
         except:
-            LED.colorWipe(Color(0,0,0))
+            LED.colorWipe(0,0,0)
 
         try:
-            LED.colorWipe(Color(0,80,255))
+            LED.colorWipe(0,80,255)
         except:
             pass
 
@@ -330,4 +330,4 @@ if __name__ == '__main__':
     except:
         servo.clean_all()
         move.destroy()
-        LED.colorWipe(Color(0,0,0))
+        LED.colorWipe(0,0,0)

@@ -148,10 +148,10 @@ class FPV:
 
                     if X_lock == 1 and Y_lock == 1:
                         if UltraData > 0.5:
-                            LED.colorWipe(Color(255,16,0))
+                            LED.colorWipe(255,16,0)
                             move.move(70, 'forward', 'no', 0.6)
                         elif UltraData < 0.4:
-                            LED.colorWipe(Color(0,16,255))
+                            LED.colorWipe(0,16,255)
                             move.move(70, 'backward', 'no', 0.6)
                             print(UltraData)
                         else:
@@ -207,11 +207,11 @@ class FPV:
                     motionCounter += 1
                     #print(motionCounter)
                     #print(text)
-                    LED.colorWipe(Color(255,16,0))
+                    LED.colorWipe(255,16,0)
                     lastMovtionCaptured = timestamp
 
                 if (timestamp - lastMovtionCaptured).seconds >= 0.5:
-                    LED.colorWipe(Color(0,16,255))
+                    LED.colorWipe(0,16,255)
 
 
             encoded, buffer = cv2.imencode('.jpg', frame_image)
