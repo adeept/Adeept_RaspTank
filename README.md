@@ -239,6 +239,29 @@ There are many ways to connect WiFi for Raspberry Pi. Two methods are provided i
     
     7. For more about the file `wpa_supplicant.conf`, refer to the official documentation [WIRELESS-CLI](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 
+    #### 2.3.3 Method A: WiFi connection for WPA2-AES
+
+    1. Create a file named `wpa_supplicant.conf`
+
+    2. Insert this following code:
+
+    ```
+    country=US
+    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    update_config=1
+
+    network={
+        ssid="YOUR SSID"
+        psk="YOUR PASSWORD"
+        proto=RSN
+        key_mgmt=WPA-PSK
+        pairwise=CCMP
+        group=CCMP
+        auth_alg=OPEN
+    }
+    ```
+    3. Save and exit. Copy the `wpa_supplicant.conf` to the root directory of the SD card. 
+
 ## 3. Software Installation & Operation on Raspberry Pi 
 - If you followed the steps in **2.2.1** and **2.3.1** for SSH and WiFi configuration, you may remove the peripherals now and use SSH to remotely control the Raspberry Pi later on.   
 
