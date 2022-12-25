@@ -26,6 +26,7 @@ commands_1 = [
     "sudo apt-get purge -y libreoffice*",
     "sudo apt-get -y clean",
     "sudo apt-get -y autoremove",
+    "sudo apt-get install python3-pip"
     "sudo pip3 install -U pip",
     "sudo apt-get install -y python-dev python-pip libfreetype6-dev libjpeg-dev build-essential",
     "sudo apt-get install -y i2c-tools",
@@ -39,7 +40,10 @@ commands_1 = [
     "sudo pip3 install websockets",
     "sudo apt-get install -y libjasper-dev",
     "sudo apt-get install -y libatlas-base-dev",
-    "sudo apt-get install -y libgstreamer1.0-0"
+    "sudo apt-get install -y libgstreamer1.0-0",
+    "sudo apt-get install libharfbuzz0b libgstreamer1.0-dev libopenexr-dev libilmbase-dev",
+    "sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev",
+    "sudo -H apt install python3-picamera"
 ]
 
 mark_1 = 0
@@ -55,7 +59,7 @@ for x in range(3):
 commands_2 = [
     "sudo pip3 install RPi.GPIO",
     "sudo apt-get -y install libqtgui4 libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev libqt4-test",
-    "sudo pip3 install -r //home/pi/adeept_rasptank/server/requirements.txt",
+    "sudo pip3 install -r //home/pi/Adeept_rasptank/server/requirements.txt",
     "sudo git clone https://github.com/oblique/create_ap",
     "cd " + thisPath + "/create_ap && sudo make install",
     "cd //home/pi/create_ap && sudo make install",
@@ -116,9 +120,9 @@ try: #fix conflict with onboard Raspberry Pi audio
 except:
     pass
 try:
-    os.system("sudo cp -f //home/pi/adeept_rasptank/server/config.txt //etc/config.txt")
+    os.system("sudo cp -f //home/pi/Adeept_rasptank/server/config.txt //etc/config.txt")
 except:
-    os.system("sudo cp -f "+ thisPath  +"/adeept_rasptank/server/config.txt //etc/config.txt")
+    os.system("sudo cp -f "+ thisPath  +"/Adeept_rasptank/server/config.txt //etc/config.txt")
 print('The program in Raspberry Pi has been installed, disconnected and restarted. \nYou can now power off the Raspberry Pi to install the camera and driver board (Robot HAT). \nAfter turning on again, the Raspberry Pi will automatically run the program to set the servos port signal to turn the servos to the middle position, which is convenient for mechanical assembly.')
 print('restarting...')
 os.system("sudo reboot")
