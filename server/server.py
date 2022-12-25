@@ -459,11 +459,13 @@ if __name__ == '__main__':
             tcpCliSock, addr = tcpSerSock.accept()
             print('...connected from :', addr)
 
+            """
             fpv=FPV.FPV()
             fps_threading=threading.Thread(target=FPV_thread)         #Define a thread for FPV and OpenCV
             fps_threading.setDaemon(True)                             #'True' means it is a front thread,it would close when the mainloop() closes
             fps_threading.start()                                     #Thread starts
             break
+            """
         except:
             LED.colorWipe(0,0,0)
 
