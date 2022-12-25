@@ -421,7 +421,7 @@ if __name__ == '__main__':
 
     try:
         LED  = LED.LED()
-        LED.colorWipe(Color(255,16,0))
+        LED.colorWipe(255, 16, 0)
     except ModuleNotFoundError as e:
         print('Use "sudo pip3 install rpi_ws281x" to install WS_281x package')
         pass
