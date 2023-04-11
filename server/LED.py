@@ -62,4 +62,4 @@ if __name__ == '__main__':
             led.colorWipe(0, 0, 255)  # blue
             time.sleep(1) 
     except:  
-        led.colorWipe_2(0,0,0)  # Lights out
+        led.colorWipe(0,0,0)  # Lights out
