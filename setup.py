@@ -39,7 +39,8 @@ commands_1 = [
     "sudo pip3 install websockets",
     "sudo apt-get install -y libjasper-dev",
     "sudo apt-get install -y libatlas-base-dev",
-    "sudo apt-get install -y libgstreamer1.0-0"
+    "sudo apt-get install -y libgstreamer1.0-0",
+    "sudo apt-get install  -y python3-opencv"
 ]
 
 mark_1 = 0
@@ -73,7 +74,7 @@ for x in range(3):
 
 commands_3 = [
     "sudo pip3 install numpy",
-    "sudo pip3 install opencv-contrib-python==3.4.3.18",
+    #"sudo pip3 install opencv-contrib-python==3.4.3.18",
     # "sudo pip3 install opencv-contrib-python==3.4.17.61",
     "sudo pip3 install imutils zmq pybase64 psutil"
 ]
