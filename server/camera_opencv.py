@@ -423,7 +423,8 @@ class Camera(BaseCamera):
     @staticmethod
     def frames():
         global ImgIsNone
-        camera = cv2.VideoCapture(Camera.video_source)
+        # camera = cv2.VideoCapture(Camera.video_source)
+        camera = cv2.VideoCapture(-1)
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
 
@@ -435,9 +436,14 @@ class Camera(BaseCamera):
             _, img = camera.read()
             if img is None:
                 if ImgIsNone == 0:
-                    print("The camera has not read data, please check whether the camera can be used normally.")
-                    print("Use the command: 'raspistill -t 1000 -o image.jpg'. Close the self-starting program webServer.py")
-                    print("Use the command: 'raspistill -t 1000 -o image.jpg' to check whether the camera can be used correctly.")
+                    print("--------------------")
+                    print("\033[31merror: Unable to read camera data.\033[0m")
+                    print("\033[33mIt may be that the Legacy camera is not turned on or the camera is not connected correctly.\033[0m")
+                    print("Open the Legacy camera: Enter in Raspberry Pi\033[34m'sudo raspi-config'\033[0m -->Select\033[34m'3 Interface Options'\033[0m -->\033[34m'I1 Legacy Camera'\033[0m.")
+                    print("Use the command: \033[34m'sudo killall python3'\033[0m. Close the self-starting program webServer.py")
+                    print("Use the command: \033[34m'raspistill -t 1000 -o image.jpg'\033[0m to check whether the camera can be used correctly.")
+                    print("Press the keyboard keys \033[34m'Ctrl + C'\033[0m multiple times to exit the current program.")
+                    print("--------Ctrl+C quit-----------")
                     ImgIsNone = 1
                 continue
 
