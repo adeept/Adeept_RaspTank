@@ -95,7 +95,6 @@ def motor_right(status, direction, speed):#Motor 1 positive and negative rotatio
 			pwm_A.ChangeDutyCycle(speed)
 	return direction
 
-
 def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1  
 	#speed = 100
 	if direction == 'forward':
@@ -139,13 +138,15 @@ def destroy():
 
 
 if __name__ == '__main__':
-	try:
-		speed_set = 60
-		setup()
-		move(speed_set, 'forward', 'no', 0.8)
-		time.sleep(1.3)
-		motorStop()
-		destroy()
-	except KeyboardInterrupt:
-		destroy()
+	while True:
+		try:
+			speed_set = 60
+			setup()
+			answer = input("Insert your direction and turn : ").split(" ")
+			move(speed_set, answer[0], answer[1], 0.8)
+			time.sleep(10)
+			motorStop()
+			destroy()
+		except KeyboardInterrupt:
+			destroy()
 
