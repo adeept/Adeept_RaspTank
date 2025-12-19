@@ -4,9 +4,8 @@
 # Author	  : William
 # Date		: 2020/03/17
 import time
-import RPi.GPIO as GPIO
+from gpiozero import InputDevice
 import threading
-from mpu6050 import mpu6050
 import Adafruit_PCA9685
 import os
 import json
@@ -18,7 +17,7 @@ move.setup()
 
 kalman_filter_X =  Kalman_filter.Kalman_filter(0.01,0.1)
 
-pwm = Adafruit_PCA9685.PCA9685()
+pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
 pwm.set_pwm_freq(50)
 
 # MPU_connection = 1
@@ -70,11 +69,10 @@ def pwmGenOut(angleInput):
 
 
 def setup():
-	GPIO.setwarnings(False)
-	GPIO.setmode(GPIO.BCM)
-	GPIO.setup(line_pin_right,GPIO.IN)
-	GPIO.setup(line_pin_middle,GPIO.IN)
-	GPIO.setup(line_pin_left,GPIO.IN)
+	global track_line_left, track_line_middle,track_line_right
+	track_line_left = InputDevice(pin=line_pin_left)
+	track_line_middle = InputDevice(pin=line_pin_middle)
+	track_line_right = InputDevice(pin=line_pin_right)
 
 
 class Functions(threading.Thread):
@@ -160,9 +158,9 @@ class Functions(threading.Thread):
 
 
 	def trackLineProcessing(self):
-		status_right = GPIO.input(line_pin_right)
-		status_middle = GPIO.input(line_pin_middle)
-		status_left = GPIO.input(line_pin_left)
+		status_right = track_line_right.value
+		status_middle = track_line_middle.value
+		status_left = track_line_left.value
 		#print('R%d   M%d   L%d'%(status_right,status_middle,status_left))
 		if status_middle == 1:
 			move.move(100, 'forward', 'no', 1)
@@ -179,7 +177,7 @@ class Functions(threading.Thread):
 	def automaticProcessing(self):
 		print('automaticProcessing')
 		if self.rangeKeep/3 > ultra.checkdist():
-			 move.move(100, 'backward', 'no', 0.5)
+			move.move(100, 'backward', 'no', 0.5)
 		elif self.rangeKeep > ultra.checkdist():
 			move.move(100, 'no', 'left', 0.5)
 		else:
@@ -188,63 +186,12 @@ class Functions(threading.Thread):
 		if self.functionMode == 'none':
 			move.move(80, 'no', 'no', 0.5)
 
-		# pwm.set_pwm(2, 0, pwm2_init)
-		# if self.scanPos == 1:
-		# 	pwm.set_pwm(self.scanServo, 0, pwm1_init-self.scanRange)
-		# 	time.sleep(0.3)
-		# 	self.scanList[0] = ultra.checkdist()
-		# elif self.scanPos == 2:
-		# 	pwm.set_pwm(self.scanServo, 0, pwm1_init)
-		# 	time.sleep(0.3)
-		# 	self.scanList[1] = ultra.checkdist()
-		# elif self.scanPos == 3:
-		# 	pwm.set_pwm(self.scanServo, 0, pwm1_init+self.scanRange)
-		# 	time.sleep(0.3)
-		# 	self.scanList[2] = ultra.checkdist()
-
-		# self.scanPos = self.scanPos + self.scanDir
-
-		# if self.scanPos > self.scanNum or self.scanPos < 1:
-		# 	if self.scanDir == 1:self.scanDir = -1
-		# 	elif self.scanDir == -1:self.scanDir = 1
-		# 	self.scanPos = self.scanPos + self.scanDir*2
-		# print(self.scanList)
-
-		# if min(self.scanList) < self.rangeKeep:
-		# 	if self.scanList.index(min(self.scanList)) == 0:
-		# 		pwm.set_pwm(self.turnServo, 0, pwm0_init+int(self.turnWiggle/3.5))
-		# 	elif self.scanList.index(min(self.scanList)) == 1:
-		# 		if self.scanList[0] < self.scanList[2]:
-		# 			pwm.set_pwm(self.turnServo, 0, pwm0_init+self.turnWiggle)
-		# 		else:
-		# 			pwm.set_pwm(self.turnServo, 0, pwm0_init-self.turnWiggle)
-		# 	elif self.scanList.index(min(self.scanList)) == 2:
-		# 		pwm.set_pwm(self.turnServo, 0, pwm0_init-int(self.turnWiggle/3.5))
-		# 	if max(self.scanList) < self.rangeKeep or min(self.scanList) < self.rangeKeep/3:
-		# 		move.move(80, 'backward', 'no', 0.5)
-		# else:
-		# 	#move along
-		# 	move.move(80, 'forward', 'no', 0.5)
-		# 	pass
-
-
-	def steadyProcessing(self):
-		print('steadyProcessing')
-		xGet = sensor.get_accel_data()
-		xGet = xGet['x']
-		xOut = kalman_filter_X.kalman(xGet)
-		pwm.set_pwm(2, 0, self.steadyGoal+pwmGenOut(xOut*9))
-		# pwm.set_pwm(2, 0, self.steadyGoal+pwmGenOut(xGet*10))
-		time.sleep(0.05)
-
 
 	def functionGoing(self):
 		if self.functionMode == 'none':
 			self.pause()
 		elif self.functionMode == 'Automatic':
 			self.automaticProcessing()
-		elif self.functionMode == 'Steady':
-			self.steadyProcessing()
 		elif self.functionMode == 'trackLine':
 			self.trackLineProcessing()
 

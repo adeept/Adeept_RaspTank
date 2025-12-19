@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# coding: utf-8
 import os
 import cv2
 from base_camera import BaseCamera
@@ -11,13 +13,26 @@ import PID
 import time
 import threading
 import imutils
-import robotLight
 
-led = robotLight.RobotLight()
+import libcamera
+
+from picamera2 import Picamera2, Preview
+import io
+# from threading import Condition, Thread, Event
+from picamera2.encoders import MJPEGEncoder
+from picamera2.outputs import FileOutput
+# import robotLight
+
+# led = robotLight.RobotLight()
 pid = PID.PID()
 pid.SetKp(0.5)
 pid.SetKd(0)
 pid.SetKi(0)
+
+Threshold = 80 # 
+findLineMove = 1
+tracking_servo_status = 0
+FLCV_Status = 0
 
 CVRun = 1
 linePos_1 = 440
@@ -26,20 +41,32 @@ lineColorSet = 255
 frameRender = 1
 findLineError = 20
 
+# When turning, only one wheel pushes the car, so a value higher than forward_speed is required.
+turn_speed = 45 # Range of values: 0-100
+forward_speed = 20 # Avoid too fast, the video screen does not respond in time. Range of values: 0-100.
+
+
+hflip = 0 # Video flip horizontally: 0 or 1 
+vflip = 0 # Video vertical flip: 0/1 
 ImgIsNone = 0
 
 colorUpper = np.array([44, 255, 255])
 colorLower = np.array([24, 100, 100])
+APPMode = None
+
+def map(input, in_min,in_max,out_min,out_max):
+    return (input-in_min)/(in_max-out_min)*(out_max-out_min)+out_min
 
 class CVThread(threading.Thread):
+# class CVThread(Thread):
     font = cv2.FONT_HERSHEY_SIMPLEX
 
     kalman_filter_X =  Kalman_filter.Kalman_filter(0.01,0.1)
     kalman_filter_Y =  Kalman_filter.Kalman_filter(0.01,0.1)
     P_direction = -1
     T_direction = -1
-    P_servo = 11
-    T_servo = 11
+    P_servo = 1 # Horizontal servo
+    T_servo = 2 # Vertical servo
     P_anglePos = 0
     T_anglePos = 0
     cameraDiagonalW = 64
@@ -53,7 +80,6 @@ class CVThread(threading.Thread):
     scGear = RPIservo.ServoCtrl()
     scGear.moveInit()
     move.setup()
-    switch.switchSetup()
 
     def __init__(self, *args, **kwargs):
         self.CVThreading = 0
@@ -81,6 +107,12 @@ class CVThread(threading.Thread):
         self.center_Pos2 = None
 
         self.center = None
+        
+        self.tracking_servo_left = None
+        self.tracking_servo_left_mark = 0
+        self.tracking_servo_right_mark = 0
+        self.servo_left_stop = 0
+        self.servo_right_stop = 0
 
         super(CVThread, self).__init__(*args, **kwargs)
         self.__flag = threading.Event()
@@ -114,26 +146,34 @@ class CVThread(threading.Thread):
                 cv2.rectangle(imgInput,(int(self.box_x-self.radius),int(self.box_y+self.radius)),(int(self.box_x+self.radius),int(self.box_y-self.radius)),(255,255,255),1)
 
         elif self.CVMode == 'findlineCV':
+            CVThread.scGear.moveAngle(2, -15) # The camera looks down.
+
             if frameRender:
                 imgInput = cv2.cvtColor(imgInput, cv2.COLOR_BGR2GRAY)
-                retval_bw, imgInput =  cv2.threshold(imgInput, 0, 255, cv2.THRESH_OTSU)
-                imgInput = cv2.erode(imgInput, None, iterations=6)
+                '''
+                Image binarization, the method of processing functions can be searched for "threshold" in the link: http://docs.opencv.org/3.0.0/examples.html
+                '''
+                retval_bw, imgInput =  cv2.threshold(imgInput, Threshold, 255, cv2.THRESH_BINARY) # Set the threshold manually and set it to 80.
+                imgInput = cv2.erode(imgInput, None, iterations=2) #  erode
+                imgInput = cv2.dilate(imgInput, None, iterations=2) # dilate
+
             try:
                 if lineColorSet == 255:
                     cv2.putText(imgInput,('Following White Line'),(30,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(128,255,128),1,cv2.LINE_AA)
                 else:
                     cv2.putText(imgInput,('Following Black Line'),(30,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(128,255,128),1,cv2.LINE_AA)
+                imgInput=cv2.merge((imgInput.copy(),imgInput.copy(),imgInput.copy()))
+                cv2.line(imgInput,(self.left_Pos1,(linePos_1+30)),(self.left_Pos1,(linePos_1-30)),(255,128,64),2)
+                cv2.line(imgInput,(self.right_Pos1,(linePos_1+30)),(self.right_Pos1,(linePos_1-30)),(64,128,255),2)
+                cv2.line(imgInput,(0,linePos_1),(640,linePos_1),(255,128,64),1)
 
-                cv2.line(imgInput,(self.left_Pos1,(linePos_1+30)),(self.left_Pos1,(linePos_1-30)),(255,128,64),1)
-                cv2.line(imgInput,(self.right_Pos1,(linePos_1+30)),(self.right_Pos1,(linePos_1-30)),(64,128,255),)
-                cv2.line(imgInput,(0,linePos_1),(640,linePos_1),(255,255,64),1)
-
-                cv2.line(imgInput,(self.left_Pos2,(linePos_2+30)),(self.left_Pos2,(linePos_2-30)),(255,128,64),1)
-                cv2.line(imgInput,(self.right_Pos2,(linePos_2+30)),(self.right_Pos2,(linePos_2-30)),(64,128,255),1)
-                cv2.line(imgInput,(0,linePos_2),(640,linePos_2),(255,255,64),1)
+                cv2.line(imgInput,(self.left_Pos2,(linePos_2+30)),(self.left_Pos2,(linePos_2-30)),(64,128,255),2)
+                cv2.line(imgInput,(self.right_Pos2,(linePos_2+30)),(self.right_Pos2,(linePos_2-30)),(64,128,255),2)
+                cv2.line(imgInput,(0,linePos_2),(640,linePos_2),(64,128,255),1)
 
                 cv2.line(imgInput,((self.center-20),int((linePos_1+linePos_2)/2)),((self.center+20),int((linePos_1+linePos_2)/2)),(0,0,0),1)
                 cv2.line(imgInput,((self.center),int((linePos_1+linePos_2)/2+20)),((self.center),int((linePos_1+linePos_2)/2-20)),(0,0,0),1)
+
             except:
                 pass
 
@@ -165,7 +205,6 @@ class CVThread(threading.Thread):
         self.cnts = cv2.findContours(self.thresh.copy(), cv2.RETR_EXTERNAL,
             cv2.CHAIN_APPROX_SIMPLE)
         self.cnts = imutils.grab_contours(self.cnts)
-        # print('x')
         # loop over the contours
         for c in self.cnts:
             # if the contour is too small, ignore it
@@ -178,64 +217,78 @@ class CVThread(threading.Thread):
             self.drawing = 1
             
             self.motionCounter += 1
-            #print(motionCounter)
-            #print(text)
             self.lastMovtionCaptured = timestamp
-            led.setColor(255,78,0)
-            # switch.switch(1,1)
-            # switch.switch(2,1)
-            # switch.switch(3,1)
 
         if (timestamp - self.lastMovtionCaptured).seconds >= 0.5:
-            led.setColor(0,78,255)
             self.drawing = 0
-            # switch.switch(1,0)
-            # switch.switch(2,0)
-            # switch.switch(3,0)
         self.pause()
 
 
-    def findLineCtrl(self, posInput, setCenter):#2
-        # if posInput:
-        if posInput > (setCenter + findLineError):
-            # move.motorStop()
-            #turnRight
-            error = (posInput-320)/3
-            outv = int(round((pid.GenOut(error)),0))
-            CVThread.scGear.moveAngle(0,-outv)
-            if CVRun:
-                move.move(80, 'no', 'right', 0.5)
+    def findLineCtrl(self, posInput):
+        global findLineMove,tracking_servo_status,FLCV_Status
+        
+        if FLCV_Status == 0:    
+            CVThread.scGear.moveAngle(0, 0) # car center. (servo_num, deflection angle)
+            CVThread.scGear.moveAngle(1, 0) # camera centered. (servo_num, deflection angle)
+            CVThread.scGear.moveAngle(2, 0)
+            FLCV_Status = 1
+        if posInput != None and findLineMove == 1:
+            if FLCV_Status == -1:
+                CVThread.scGear.stopWiggle()
+                self.tracking_servo_left_mark = 0
+                self.tracking_servo_right_mark = 0
+                FLCV_Status = 1
+            if posInput > 480: # The position of the center of the black line in the screen (value range: 0-640)
+                tracking_servo_status = 1 #  right. -1/0/1: left/mid/right. In which direction the track may be offset out of the tracking area.
+                if CVRun:
+                    CVThread.scGear.moveAngle(0, -30) 
+                    move.video_Tracking_Move(turn_speed, 1) 
+                else:
+                    CVThread.scGear.moveAngle(0, 0)
+                    move.motorStop() # stop
+
+            elif posInput < 180: # turnLeft.
+                tracking_servo_status = -1 # left
+                if CVRun:
+                    CVThread.scGear.moveAngle(0, 30) 
+                    move.video_Tracking_Move(turn_speed, 1) 
+                
+                else:
+                    CVThread.scGear.moveAngle(0, 0)
+                    move.motorStop() # stop.
+                        
             else:
-                move.move(80, 'no', 'no', 0.5)
-            pass
-        elif posInput < (setCenter - findLineError):
-            # move.motorStop()
-            #turnLeft
-            error = (320-posInput)/3
-            outv = int(round((pid.GenOut(error)),0))
-            CVThread.scGear.moveAngle(0,outv)
-            if CVRun:
-                move.move(80, 'no', 'left', 0.5)
-            else:
-                move.move(80, 'no', 'no', 0.5)
-            pass
-        else:
-            if CVRun:
-                move.move(80, 'forward', 'no', 0.5)
-            else:
-                move.move(80, 'no', 'no', 0.5)
-            #forward
-            pass
-        # else:
-        #     pass
+                tracking_servo_status = 0 # mid
+                if CVRun:
+                    CVThread.scGear.moveAngle(0, 0) 
+                    move.video_Tracking_Move(turn_speed, 1) 
+
+                else: 
+                    move.motorStop() # stop
+                pass
+        
+        else: # Tracking color not found.
+            move.motorStop() # stop.
+            FLCV_Status = -1
+            if tracking_servo_status == -1 : # -1/0/1: left/mid/right. rotation left.
+                CVThread.scGear.moveAngle(0, 30) 
+                move.video_Tracking_Move(turn_speed, 1) 
+            elif tracking_servo_status == 1 : # rotation right
+                CVThread.scGear.moveAngle(0, -30) 
+                move.video_Tracking_Move(turn_speed, 1) 
+            else:  # no track ahead. tracking_servo_status==0
+                pass
+
 
 
     def findlineCV(self, frame_image):
         frame_findline = cv2.cvtColor(frame_image, cv2.COLOR_BGR2GRAY)
-        retval, frame_findline =  cv2.threshold(frame_findline, 0, 255, cv2.THRESH_OTSU)
-        frame_findline = cv2.erode(frame_findline, None, iterations=6)
+        retval, frame_findline =  cv2.threshold(frame_findline, Threshold, 255, cv2.THRESH_BINARY) # Set the threshold manually and set it to 80.
+        frame_findline = cv2.erode(frame_findline, None, iterations=2)
+        frame_findline = cv2.dilate(frame_findline, None, iterations=2)
         colorPos_1 = frame_findline[linePos_1]
         colorPos_2 = frame_findline[linePos_2]
+        
         try:
             lineColorCount_Pos1 = np.sum(colorPos_1 == lineColorSet)
             lineColorCount_Pos2 = np.sum(colorPos_2 == lineColorSet)
@@ -243,25 +296,40 @@ class CVThread(threading.Thread):
             lineIndex_Pos1 = np.where(colorPos_1 == lineColorSet)
             lineIndex_Pos2 = np.where(colorPos_2 == lineColorSet)
 
+            # Roughly judge whether there is a color to track.
+            if lineIndex_Pos1 !=[]:
+                if abs(lineIndex_Pos1[0][-1] - lineIndex_Pos1[0][0]) > 500:
+                    print("Tracking color not found")
+                    findLineMove = 0    # No tracking color, stop moving
+                else:
+                    findLineMove = 1
+            elif lineIndex_Pos2!= []:
+                if abs(lineIndex_Pos2[0][-1] - lineIndex_Pos2[0][0]) > 500:
+                    print("Tracking color not found")
+                    findLineMove = 0
+                else:
+                    findLineMove = 1
+
             if lineColorCount_Pos1 == 0:
                 lineColorCount_Pos1 = 1
             if lineColorCount_Pos2 == 0:
                 lineColorCount_Pos2 = 1
 
-            self.left_Pos1 = lineIndex_Pos1[0][lineColorCount_Pos1-1]
-            self.right_Pos1 = lineIndex_Pos1[0][0]
+            self.left_Pos1 = lineIndex_Pos1[0][1] # Is [1] instead of [0], in order to remove black/white edges that may appear on the far left
+            self.right_Pos1 = lineIndex_Pos1[0][lineColorCount_Pos1-2]   # 
+
             self.center_Pos1 = int((self.left_Pos1+self.right_Pos1)/2)
 
-            self.left_Pos2 = lineIndex_Pos2[0][lineColorCount_Pos2-1]
-            self.right_Pos2 = lineIndex_Pos2[0][0]
+            self.left_Pos2 =  lineIndex_Pos2[0][1]
+            self.right_Pos2 = lineIndex_Pos2[0][lineColorCount_Pos2-2]
             self.center_Pos2 = int((self.left_Pos2+self.right_Pos2)/2)
 
             self.center = int((self.center_Pos1+self.center_Pos2)/2)
         except:
-            center = None
+            self.center = None
             pass
 
-        self.findLineCtrl(self.center, 320)
+        self.findLineCtrl(self.center)
         self.pause()
 
 
@@ -275,7 +343,7 @@ class CVThread(threading.Thread):
                 CVThread.X_lock = 0
             else:
                 CVThread.X_lock = 1
-        elif ID == 11:
+        elif ID == 2:
             errorGenOut = CVThread.kalman_filter_Y.kalman(errorInput)
             CVThread.T_anglePos += 0.1*(errorGenOut*Dir)*CVThread.cameraDiagonalH/CVThread.videoH
 
@@ -286,9 +354,14 @@ class CVThread(threading.Thread):
                 CVThread.Y_lock = 1
         else:
             print('No servoPort %d assigned.'%ID)
+        time.sleep(0.1)
 
     def findColor(self, frame_image):
-        hsv = cv2.cvtColor(frame_image, cv2.COLOR_BGR2HSV)
+        global APPMode
+        if APPMode == 'APP':
+            hsv = cv2.cvtColor(frame_image, cv2.COLOR_BGR2RGB)
+        else:
+            hsv = cv2.cvtColor(frame_image, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, colorLower, colorUpper)#1
         mask = cv2.erode(mask, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
@@ -305,23 +378,11 @@ class CVThread(threading.Thread):
             Y = int(self.box_y)
             error_Y = 240 - Y
             error_X = 320 - X
-            # CVThread.servoMove(CVThread.P_servo, CVThread.P_direction, error_X)
-            CVThread.servoMove(CVThread.T_servo, CVThread.T_direction, error_Y)
+            CVThread.servoMove(CVThread.P_servo, CVThread.P_direction, -error_X)
+            CVThread.servoMove(CVThread.T_servo, CVThread.T_direction, -error_Y)
 
-            # if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
-            if CVThread.Y_lock == 1:
-                led.setColor(255,78,0)
-                # switch.switch(1,1)
-                # switch.switch(2,1)
-                # switch.switch(3,1)
-            else:
-                led.setColor(0,78,255)
-                # switch.switch(1,0)
-                # switch.switch(2,0)
-                # switch.switch(3,0)
         else:
             self.findColorDetection = 0
-            move.motorStop()
         self.pause()
 
 
@@ -336,6 +397,7 @@ class CVThread(threading.Thread):
             self.__flag.wait()
             if self.CVMode == 'none':
                 continue
+            
             elif self.CVMode == 'findColor':
                 self.CVThreading = 1
                 self.findColor(self.imgCV)
@@ -348,21 +410,15 @@ class CVThread(threading.Thread):
                 self.CVThreading = 1
                 self.watchDog(self.imgCV)
                 self.CVThreading = 0
-            pass
+            else:
+                pass
+
+
 
 
 class Camera(BaseCamera):
     video_source = 0
     modeSelect = 'none'
-    # modeSelect = 'findlineCV'
-    # modeSelect = 'findColor'
-    # modeSelect = 'watchDog'
-
-
-    def __init__(self):
-        if os.environ.get('OPENCV_CAMERA_SOURCE'):
-            Camera.set_video_source(int(os.environ['OPENCV_CAMERA_SOURCE']))
-        super(Camera, self).__init__()
 
 
     def colorFindSet(self, invarH, invarS, invarV):
@@ -388,6 +444,37 @@ class Camera(BaseCamera):
         print('HSV_2:%d %d %d'%(HUE_2, SAT_2, VAL_2))
         print(colorUpper)
         print(colorLower)
+
+    def colorFindSetApp(self, invarH, invarS, invarV):
+        global colorUpper, colorLower
+        HUE_1 = invarH + 100
+        HUE_2 = invarH - 100
+        if HUE_1>255:
+            HUE_1=255
+        if HUE_2<0:
+            HUE_2=0
+
+        SAT_1 = invarS + 100
+        SAT_2 = invarS-100
+        if SAT_1>255:
+            SAT_1=255
+        if SAT_2<0:
+            SAT_2=0
+
+        VAL_1 = invarV+100
+        VAL_2 = invarV-100
+        if VAL_1>255:
+            VAL_1=255
+        if VAL_2<0:
+            VAL_2=0
+
+        colorUpper = np.array([HUE_1, SAT_1, VAL_1])
+        colorLower = np.array([HUE_2, SAT_2, VAL_2])
+        print('HSV_1:%d %d %d'%(HUE_1, SAT_1, VAL_1))
+        print('HSV_2:%d %d %d'%(HUE_2, SAT_2, VAL_2))
+        print(colorUpper)
+        print(colorLower)
+
 
     def modeSet(self, invar):
         Camera.modeSelect = invar
@@ -416,53 +503,78 @@ class Camera(BaseCamera):
         global findLineError
         findLineError = invar
 
+    def Threshold(self, value):
+        global Threshold
+        Threshold = value
+        
+    def ThresholdOK(self):
+        global Threshold
+        return Threshold
+
     @staticmethod
     def set_video_source(source):
         Camera.video_source = source
 
+
+
+
+
+# _______________________________________________________
     @staticmethod
     def frames():
-        global ImgIsNone
-        # camera = cv2.VideoCapture(Camera.video_source)
-        camera = cv2.VideoCapture(-1)
-        if not camera.isOpened():
+        global ImgIsNone,hflip,vflip
+        picam2 = Picamera2() 
+        
+        preview_config = picam2.preview_configuration
+        preview_config.size = (640, 480)
+        preview_config.format = 'RGB888'  # 'XRGB8888', 'XBGR8888', 'RGB888', 'BGR888', 'YUV420'
+        preview_config.transform = libcamera.Transform(hflip=hflip, vflip=vflip)
+        preview_config.colour_space = libcamera.ColorSpace.Sycc()
+        preview_config.buffer_count = 4
+        preview_config.queue = True
+
+        if not picam2.is_open:
             raise RuntimeError('Could not start camera.')
+
+        try:
+            picam2.start()
+        except Exception as e:
+            print(f"\033[38;5;1mError:\033[0m\n{e}")
+            print("\nPlease check whether the camera is connected well,  \
+                  and disable the \"legacy camera driver\" on raspi-config")
 
         cvt = CVThread()
         cvt.start()
 
         while True:
-            # read current frame
-            _, img = camera.read()
+            start_time = time.time()
+            img = picam2.capture_array()
+
             if img is None:
                 if ImgIsNone == 0:
                     print("--------------------")
                     print("\033[31merror: Unable to read camera data.\033[0m")
-                    print("\033[33mIt may be that the Legacy camera is not turned on or the camera is not connected correctly.\033[0m")
-                    print("Open the Legacy camera: Enter in Raspberry Pi\033[34m'sudo raspi-config'\033[0m -->Select\033[34m'3 Interface Options'\033[0m -->\033[34m'I1 Legacy Camera'\033[0m.")
                     print("Use the command: \033[34m'sudo killall python3'\033[0m. Close the self-starting program webServer.py")
-                    print("Use the command: \033[34m'raspistill -t 1000 -o image.jpg'\033[0m to check whether the camera can be used correctly.")
                     print("Press the keyboard keys \033[34m'Ctrl + C'\033[0m multiple times to exit the current program.")
                     print("--------Ctrl+C quit-----------")
                     ImgIsNone = 1
                 continue
-
+            
             if Camera.modeSelect == 'none':
-                switch.switch(1,0)
                 cvt.pause()
             else:
                 if cvt.CVThreading:
                     pass
                 else:
+                    pass
                     cvt.mode(Camera.modeSelect, img)
                     cvt.resume()
                 try:
+                    pass
                     img = cvt.elementDraw(img)
                 except:
                     pass
-            
 
-
-            # encode as a jpeg image and return it
             if cv2.imencode('.jpg', img)[0]:
                 yield cv2.imencode('.jpg', img)[1].tobytes()
+            

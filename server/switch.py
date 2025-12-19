@@ -1,41 +1,36 @@
 #!/usr/bin/env/python
 # File name   : switch.py
-# Production  : HAT
-# Website     : www.gewbot.com
-# Author      : William
-# Date        : 2018/08/22
+# Website     : www.adeept.com
+# Author      : Adeept
+# Date        : 2025/05/15
 
-import RPi.GPIO as GPIO
+import time
+
+from gpiozero import LED
+
 
 def switchSetup():
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(5, GPIO.OUT)
-    GPIO.setup(6, GPIO.OUT)
-    GPIO.setup(13, GPIO.OUT)
+    global led1,led2,led3
+    led1 = LED(9)
+    led2 = LED(25)
+    led3 = LED(11)
 
 def switch(port, status):
     if port == 1:
         if status == 1:
-            GPIO.output(5, GPIO.HIGH)
+            led1.on()
         elif status == 0:
-            GPIO.output(5,GPIO.LOW)
-        else:
-            pass
+            led1.off()
     elif port == 2:
         if status == 1:
-            GPIO.output(6, GPIO.HIGH)
+            led2.on()
         elif status == 0:
-            GPIO.output(6,GPIO.LOW)
-        else:
-            pass
+            led2.off()
     elif port == 3:
         if status == 1:
-            GPIO.output(13, GPIO.HIGH)
+            led3.on()
         elif status == 0:
-            GPIO.output(13,GPIO.LOW)
-        else:
-            pass
+            led3.off()
     else:
         print('Wrong Command: Example--switch(3, 1)->to switch on port3')
 
@@ -43,3 +38,16 @@ def set_all_switch_off():
     switch(1,0)
     switch(2,0)
     switch(3,0)
+
+
+if __name__ == "__main__":
+    switchSetup()
+    while True:
+        switch(1,1)
+        time.sleep(1)
+        switch(2,1)
+        time.sleep(1)
+        switch(3,1)
+        time.sleep(1)
+        set_all_switch_off()
+        time.sleep(1)

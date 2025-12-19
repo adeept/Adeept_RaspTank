@@ -4,58 +4,19 @@
 # Website     : www.gewbot.com
 # Author      : William
 # Date        : 2019/02/23
-import RPi.GPIO as GPIO
-import time
+from gpiozero import DistanceSensor
+from time import sleep
+Tr = 23
+Ec = 24
 
-Tr = 11
-Ec = 8
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(Tr, GPIO.OUT,initial=GPIO.LOW)
-GPIO.setup(Ec, GPIO.IN)
+sensor = DistanceSensor(echo=Ec, trigger=Tr, max_distance=2) # Maximum detection distance 2m.
 
-def checkdist():       #Reading distance
-    for i in range(5):  # Remove invalid test results.
-        GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(Tr, GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(Ec, GPIO.IN)
-        GPIO.output(Tr, GPIO.LOW)
-        time.sleep(0.000002)
-        GPIO.output(Tr, GPIO.HIGH)
-        time.sleep(0.000015)
-        GPIO.output(Tr, GPIO.LOW)
-        while not GPIO.input(Ec):
-            pass
-        t1 = time.time()
-        while GPIO.input(Ec):
-            pass
-        t2 = time.time()
-        dist = (t2-t1)*340/2
-        if dist > 9 and i < 4:  # 5 consecutive times are invalid data, return the last test data
-            continue
-        else:
-            return (t2-t1)*340/2
-
-# def checkdist():       #Reading distance
-#     GPIO.setmode(GPIO.BCM)
-#     GPIO.setup(Tr, GPIO.OUT,initial=GPIO.LOW)
-#     GPIO.setup(Ec, GPIO.IN)
-#     GPIO.output(Tr, GPIO.HIGH)
-#     time.sleep(0.000015)
-#     GPIO.output(Tr, GPIO.LOW)
-#     while not GPIO.input(Ec):
-#         pass
-#     t1 = time.time()
-#     while GPIO.input(Ec):
-#         pass
-#     t2 = time.time()
-#     return round((t2-t1)*340/2,2)
-#     #return (t2-t1)*340/2
+def checkdist():
+    return (sensor.distance) *100 # Unit: cm
 
 if __name__ == '__main__':
     while True:
         distance = checkdist()*100
         print("%.2f cm" %distance)
-        time.sleep(1)
+        sleep(0.05)

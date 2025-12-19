@@ -8,7 +8,6 @@
 import time
 import threading
 import move
-import Adafruit_PCA9685
 import os
 import info
 import RPIservo
@@ -81,7 +80,7 @@ def servoPosInit():
     scGear.initConfig(0,init_pwm0,1)
     P_sc.initConfig(1,init_pwm1,1)
     T_sc.initConfig(2,init_pwm2,1)
-    H_sc.initConfig(3,init_pwm3,1)
+    H1_sc.initConfig(3,init_pwm3,1)
     G_sc.initConfig(4,init_pwm4,1)
 
 
@@ -96,12 +95,6 @@ def replace_num(initial,new_num):   #Call this function to replace data in '.txt
             newline += line
     with open(thisPath+"/RPIservo.py","w") as f:
         f.writelines(newline)
-
-
-def FPV_thread():
-    global fpv
-    fpv=FPV.FPV()
-    fpv.capture_thread(addr[0])
 
 
 def ap_thread():
@@ -319,7 +312,7 @@ def configPWM(command_input, response):
 
     elif 'PWM3MS' == command_input:
         init_pwm3 = H_sc.lastPos[3]
-        H_sc.initConfig(3,H_sc.lastPos[3],1)
+        H1_sc.initConfig(3,H1_sc.lastPos[3],1)
         replace_num('init_pwm3 = ', H_sc.lastPos[3])
 
     elif 'PWM4MS' == command_input:
@@ -342,7 +335,7 @@ def configPWM(command_input, response):
         T_sc.initConfig(2,300,1)
         replace_num('init_pwm2 = ', 300)
 
-        H_sc.initConfig(3,300,1)
+        H1_sc.initConfig(3,300,1)
         replace_num('init_pwm3 = ', 300)
 
         G_sc.initConfig(4,300,1)
@@ -530,10 +523,18 @@ if __name__ == '__main__':
     flask_app.startthread()
 
     try:
-        RL=robotLight.RobotLight()
-        RL.start()
-        RL.breath(70,70,255)
-    except ModuleNotFoundError as e:
+        # global WS2812
+        robotlight_check = robotLight.check_rpi_model()
+        if robotlight_check == 5:
+            print("\033[1;33m WS2812 officially does not support Raspberry Pi 5 for the time being, and the WS2812 LED cannot be used on Raspberry Pi 5.\033[0m")
+            WS2812_mark = 0 # WS2812 not compatible
+        else:
+            print("WS2812 success!")
+            WS2812_mark = 1
+            WS2812=robotLight.RobotWS2812()
+            WS2812.start()
+            WS2812.breath(70,70,255)
+    except:
         print('Use "sudo pip3 install rpi_ws281x" to install WS_281x package\n使用"sudo pip3 install rpi_ws281x"命令来安装rpi_ws281x')
         pass
 
@@ -547,15 +548,17 @@ if __name__ == '__main__':
             break
         except Exception as e:
             print(e)
-            RL.setColor(0,0,0)
+            if WS2812_mark:
+                WS2812.setColor(0,0,0)
+            else:
+                pass
 
-        try:
-            RL.setColor(0,80,255)
-        except:
-            pass
     try:
         asyncio.get_event_loop().run_forever()
     except Exception as e:
         print(e)
-        RL.setColor(0,0,0)
+        if WS2812_mark:
+            WS2812.setColor(0,0,0)
+        else:
+            pass
         move.destroy()
