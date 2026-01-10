@@ -289,10 +289,17 @@ if __name__ == '__main__':
 	sc = ServoCtrl()
 	sc.start()
 	while 1:
-		sc.moveAngle(0,(random.random()*100-50))
-		time.sleep(1)
-		sc.moveAngle(1,(random.random()*100-50))
-		time.sleep(1)
+		for i in range(16):
+			sc.moveAngle(i, 0)
+			time.sleep(0.1)
+		
+		for i in range(16):
+			sc.moveAngle(i, 500)		
+			time.sleep(0.1)
+		# sc.moveAngle(0,(random.random()*100-50))
+		# time.sleep(1)
+		# sc.moveAngle(1,(random.random()*100-50))
+		# time.sleep(1)
 		'''
 		sc.singleServo(0, 1, 5)
 		time.sleep(6)
@@ -318,5 +325,3 @@ if __name__ == '__main__':
 		pwm.set_pwm(0,0,100)
 		time.sleep(2)
 		'''
-		pass
-	pass
