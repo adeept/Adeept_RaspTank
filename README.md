@@ -1,4 +1,4 @@
-## The RaspTank has been upgraded, and this version is now discontinued. 
+## The RaspTank has been upgraded and this version is now discontinued. 
 This code repository is only applicable to the RaspTank equipped with the green expansion board. 
 
 ## If your RaspTank is equipped with a purple expansion board, do not use this code.  
